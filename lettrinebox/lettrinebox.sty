@@ -1,0 +1,37 @@
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{lettrinebox}
+\RequirePackage{coloredlettrine}
+\RequirePackage{xstring}
+\RequirePackage{setspace}
+\RequirePackage{fontspec}
+
+\newfontfamily\titlefont[LetterSpace=40,WordSpace=5]{EB Garamond}
+\newfontfamily\ebgar{EBGaramond}[
+  Path=./EBGaramond-0.016/otf/,
+  Extension=.otf,
+  UprightFont=*12-Regular,
+  ItalicFont=*12-Italic,
+  RawFeature={+ss02,+cv01,+ss05,+dlig, +hlig, +clig, +calt, +swsh},
+]
+
+\def\splitfirstword#1{\getfirstword#1\relax}
+\def\getfirstword#1 #2\relax{
+    \StrLen{#1}[\len]
+    \StrChar{#1}{1}[\initial]
+    \StrMid{#1}{2}{\len}[\rest]
+    \coloredlettrine[lines=3, nindent=0.1em]{\initial}{\rest} #2
+}
+\newcommand{\lettrinebox}[3]{
+    \begin{spacing}{0.7}
+        \ebgar{
+            \parbox{#1}{
+                \begin{center}
+                    \titlefont\textsc{#2.}
+                \end{center}
+                \splitfirstword{#3}
+                \char"E002
+            }
+        }
+    \end{spacing}
+}
+\endinput
