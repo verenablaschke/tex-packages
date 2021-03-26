@@ -7,7 +7,7 @@ To quickly check how many notes there are left in your document, `\editnotesumma
 
 ## Example
 
-![Screenshot of the output of the code below](https://github.com/verenablaschke/tex-packages/blob/main/editnotes/editnotes-demo.png)
+![Screenshot of the output of the code below](https://github.com/verenablaschke/tex-packages/blob/main/editnotes/editnotes-demo-wide.png)
 
 ```
 \documentclass{article}

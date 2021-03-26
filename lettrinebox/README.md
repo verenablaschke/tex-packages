@@ -12,7 +12,7 @@ Import `lettrinebox` and use the command `\lettrinebox{width}{title goes here}{a
 
 ## Example
 
-![Screenshot of the output of the code below](https://github.com/verenablaschke/tex-packages/blob/main/lettrinebox/lettrinebox-demo.png)
+![Screenshot of the output of the code below](https://github.com/verenablaschke/tex-packages/blob/main/lettrinebox/lettrinebox-demo-wide.png)
 
 ```
 \documentclass{article}
