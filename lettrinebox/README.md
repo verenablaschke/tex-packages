@@ -9,6 +9,7 @@ The file `coloredlettrine.sty` was compiled using the code in Raphaël Pinson's 
 
 To use lettrinebox, add the files in this folder to your working directory.
 Import `lettrinebox` and use the command `\lettrinebox{width}{title goes here}{actual text goes here}`.
+Compile the project with XeLaTex.
 
 ## Example
 

@@ -5,6 +5,8 @@ It currently supports three types of editing notes: `\todo`, `\rephrase` and `\r
 If you would not like the highlighted text to be prepended by a label, you can use the asterisk versions of the commands.
 To quickly check how many notes there are left in your document, `\editnotesummary` provides you with an overview.
 
+To use this package, add the `.sty` file in this folder to your working directory.
+
 ## Example
 
 ![Screenshot of the output of the code below](https://github.com/verenablaschke/tex-packages/blob/main/editnotes/editnotes-demo-wide.png)
