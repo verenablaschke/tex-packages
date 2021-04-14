@@ -1,0 +1,56 @@
+\documentclass[11pt]{memoir}
+\usepackage{booktemplate}
+\usepackage{lipsum}
+
+\newcommand{\booktitle}{A Sample Book}
+
+\begin{document}
+\frontmatter
+
+\halftitlepage
+\titlepage
+{Designer Initials}
+{Author Name}
+{
+    {\extrahuge\swshape A}\\
+    \vspace{0.3em}
+    {\extrahuge Sample}\\
+    \vspace{0.3em}
+    {\extrahuge Book}
+}
+{series name}
+{i}
+\colophonpage
+{was designed by The Designer\\
+in 2021, using EB Garamond typefaces.
+}{The cover illustration is a detail of ...
+\lipsum[1][1-3]
+}
+
+\tableofcontents*
+
+\startmainmatter
+
+\chapter{One}
+\section{Part I}
+\chapterstart{This is where the chapter starts}
+\lipsum[1]
+
+\lipsum[2][1]
+
+\lipsum[2][2-5]
+
+\section{Interlude}
+\lipsum[3]
+
+\section{Part II}
+\lipsum[4]
+\sectionrule
+\lipsum[5]
+
+\startappendix
+\section{Author's Notes}
+\subsection{Interlude}
+\lipsum[6]
+
+\end{document}

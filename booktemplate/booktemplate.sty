@@ -1,0 +1,231 @@
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{booktemplate}
+\RequirePackage[explicit]{titlesec}
+\RequirePackage{ebgaramond}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[english]{babel}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{etoolbox}
+\RequirePackage{graphicx}
+\RequirePackage{adjustbox}
+
+%%%%%%% Page size and general typesetting %%%%%%%
+\setstocksize{216.41mm}{154.43mm}
+\settrimmedsize{210mm}{148mm}{*}
+\settrims{6.41mm}{6.43mm}
+\setlrmarginsandblock{22mm}{22mm}{*}
+\setulmarginsandblock{23mm}{17mm}{*}
+\checkandfixthelayout
+
+% Typesetting details from
+% http://www.khirevich.com/latex/microtype/
+\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10]{microtype}
+\frenchspacing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Custom design elements %%%%%%%
+\newcommand{\chapterstart}[1]{%
+    \noindent\textsc{#1}%
+}
+
+\newcommand{\sectionrule}{%
+\begin{center}
+    $\infty$
+\end{center}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Chapter/section titles %%%%%%%
+% Chapter titles:
+% Horizontal rule, chapter title in italics, horizontal rule
+% Based on the style 'daleif3' in http://tug.ctan.org/info/MemoirChapStyles/MemoirChapStyles.pdf
+\makeatletter
+\makechapterstyle{customchapter}{
+    % don't print "Chapter ..."
+    \renewcommand\chapternamenum{}\renewcommand\printchaptername{}
+    % don't print the chapter number
+    \renewcommand\printchapternum{}
+    \setlength\midchapskip{7pt}
+    \renewcommand\chaptitlefont{\huge\itshape\centering}
+    \renewcommand\afterchapternum{%
+        \hrule\vskip\midchapskip%
+    }
+    \renewcommand\afterchaptertitle{%
+        \par\vskip-2\midchapskip%
+        \rule\textwidth\normalrulethickness
+        \nobreak\vskip\afterchapskip%
+    }
+}
+\makeatother
+\chapterstyle{customchapter}
+
+% Mid-height horizontal rules
+% Based on https://tex.stackexchange.com/a/451330 (CC BY-SA 4.0)
+\makeatletter
+\def\myrulefill#1#2{\leavevmode\leaders\hrule\@height#1\@depth#2\hfill \kern\z@}
+\makeatother
+\newcommand*\crulefilllower[1][0.4pt]{\myrulefill{\dimexpr(1ex+#1)/2}{\dimexpr(-1ex+#1)/2}}
+\newcommand*\crulefillupper[1][0.9pt]{\myrulefill
+    {\dimexpr(\fontcharht\font`X+#1)/2}{\dimexpr(-\fontcharht\font`X+#1)/2}}
+
+% Section titles:
+% Title in italics, between horizontal rules
+\titleformat{\section}{}{}{0pt}{\itshape\crulefilllower~#1~\crulefilllower}
+
+% Subsection titles:
+% Title in boldface
+\titleformat{\subsection}{}{}{0pt}{\bfseries#1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Headers %%%%%%%
+% Even pages: book title in small caps
+% Odd pages: chapter title in italics
+% Based on https://tex.stackexchange.com/a/38449 (CC BY-SA 3.0)
+\nouppercaseheads
+\makepagestyle{mystyle} 
+\setlength{\headwidth}{\textwidth}
+\makerunningwidth{mystyle}{\headwidth}
+\makeevenhead{mystyle}{\thepage}{\textsc\booktitle}{} 
+\makeoddhead{mystyle}{}{\itshape\leftmark}{\thepage} 
+\makeatletter
+\makepsmarks{mystyle}{%
+  \createmark{chapter}{left}{nonumber}{}{}
+}
+\makeatother
+\pagestyle{mystyle}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Front matter pages %%%%%%%
+% Half-title (page that contains just the title)
+\newcommand{\halftitlepage}[1][\booktitle]{
+    \vspace*{\fill}
+    \begin{center}
+    \Huge{#1}
+    \end{center}
+    \vspace{0.6\textheight}
+    \newpage
+    % Also add empty page
+    \null
+    \newpage
+}
+
+% Title page (styled like the cover)
+% - extra large font sizes
+\newcommand{\extrahuge}[1]{%
+    \fontsize{50}{60}\selectfont#1%
+}
+\newcommand{\veryhuge}[1]{%
+    \fontsize{35}{42}\selectfont#1%
+}
+% - the actual title page
+\newcommand{\titlepage}[5]{
+\begin{center}
+    {\Large #1}\\ % Designer
+    \vspace{2em}
+    {\huge #2}\\ % Author
+    \vspace{\fill}
+    #3\\ % Book title
+    \vspace{\fill}
+    {\LARGE\bfseries\scshape #4}\\ % Series title
+    \vspace{0.5em}
+    {\LARGE\bfseries\scshape\crulefilllower~#5~\crulefilllower} % Number in series
+\end{center}
+\newpage
+}
+
+% Colophon page
+\newcommand{\colophonpage}[3]{
+\vspace*{\fill}
+\begin{center}
+\begin{minipage}{0.7\textwidth}
+    {\centering
+        {\large\textit{\booktitle}}\\
+        #1\\% "designed by..."
+    }
+    \sectionrule
+    #2  % main part
+    \sectionrule
+    {\centering
+    This is the \_\_\_ copy of this edition.\\
+    }
+\end{minipage}
+\end{center}
+\newpage
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Front matter style %%%%%%%
+% No page numbers in the front matter
+% https://tex.stackexchange.com/a/53491 (CC BY-SA 3.0)
+\makeatletter
+\aliaspagestyle{title}{empty}
+\let\origps@chapter\ps@chapter
+\preto\frontmatter{\let\ps@chapter\ps@empty\pagestyle{empty}}
+\preto\mainmatter{%
+  \cleardoublepage
+  \let\ps@chapter\origps@chapter\pagestyle{headings}}
+\makeatother
+
+% Table of contents:
+% - no chapter/section numbers
+\renewcommand{\chapternumberline}[1]{}
+\renewcommand{\thesection}{}
+% - dots for chapters
+\renewcommand{\cftchapterdotsep}{\cftdotsep}
+% - include subsections
+\setcounter{tocdepth}{2}
+% - indent subsections further
+\makeatletter
+\renewcommand*\l@subsection{\@dottedtocline{1}{6em}{0em}}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Main matter %%%%%%%
+\newcommand{\startmainmatter}[1][7]{
+\mainmatter
+\pagestyle{mystyle}
+\setcounter{page}{#1}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Appendix %%%%%%%
+\newcommand{\startappendix}{
+\cleardoublepage
+\chapter{Appendix}
+\setcounter{page}{1}
+\pagenumbering{roman}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Hyphenation %%%%%%%
+% Minimum extra line length before the compiler starts complaining
+\hfuzz=2.2pt
+% Ways to fix line breaks:
+% - \\
+% - \allowbreak{}
+% - \- (inserts hyphen if LaTeX breaks the line)
+% - \mbox{ ... } (no break!)
+% - ~ (non-breaking space)
+
+% Use these when custom hyphenation doesn't do the trick.
+% They stretch the whitespace in otherwise too short lines
+% (include up to the word before the one that's overlong).
+\newcommand{\spreadlinepar}[1]{%
+\makebox[\dimexpr\linewidth-\parindent][s]{#1}\\%
+}
+\newcommand{\spreadlinemid}[1]{%
+\makebox[\dimexpr\linewidth][s]{#1}\\%
+}
+
+\hyphenation{ex-am-ple}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\endinput
