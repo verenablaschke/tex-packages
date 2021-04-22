@@ -14,7 +14,7 @@
 \settrimmedsize{210mm}{148mm}{*}
 \settrims{6.41mm}{6.43mm}
 \setlrmarginsandblock{22mm}{22mm}{*}
-\setulmarginsandblock{23mm}{17mm}{*}
+\setulmarginsandblock{20mm}{20mm}{*}
 \checkandfixthelayout
 
 % Typesetting details from
@@ -80,7 +80,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%% Headers %%%%%%%
+%%%%%%% Headers/footers %%%%%%%
 % Even pages: book title in small caps
 % Odd pages: chapter title in italics
 % Based on https://tex.stackexchange.com/a/38449 (CC BY-SA 3.0)
@@ -96,7 +96,11 @@
 }
 \makeatother
 \pagestyle{mystyle}
-%%%%%%%%%%%%%%%%%%%%%%%
+
+% No page numbers on chapter opening pages
+\makeoddfoot{plain}{}{}{}
+\chapterstyle{plain}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %%%%%%% Front matter pages %%%%%%%
