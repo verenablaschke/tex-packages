@@ -61,4 +61,32 @@ Enjoy!}
 </td>
 </tr>
 
+<tr>
+  <td colspan="2"><a href="https://github.com/verenablaschke/tex-packages/tree/main/booktemplate">booktemplate</a>
+</td>
+<tr>
+<td>
+<pre>
+<img src="https://github.com/verenablaschke/tex-packages/blob/main/booktemplate/booktemplate-demo.png"/>
+</pre>
+</td>
+<td>
+  <i>A style file for the memoir class.</i>
+</td>
+</tr>
+
+<tr>
+  <td colspan="2"><a href="https://github.com/verenablaschke/tex-packages/tree/main/booktemplate-sunrise">booktemplate-sunrise</a>
+</td>
+<tr>
+<td>
+<pre>
+<img src="https://github.com/verenablaschke/tex-packages/blob/main/booktemplate-sunrise/booktemplate-sunrise-demo.png"/>
+</pre>
+</td>
+<td>
+  <i>Another style file for the memoir class.</i>
+</td>
+</tr>
+
 </table>
