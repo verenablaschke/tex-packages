@@ -1,0 +1,297 @@
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{booktemplate-sunrise}
+\RequirePackage[explicit]{titlesec}
+\RequirePackage{ebgaramond}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[english]{babel}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{etoolbox}
+\RequirePackage{graphicx}
+\RequirePackage{adjustbox}
+\RequirePackage{xcolor}
+\RequirePackage[framemethod=tikz]{mdframed}
+
+%%%%%%% Page size and general typesetting %%%%%%%
+\setstocksize{216.41mm}{154.43mm}
+\settrimmedsize{210mm}{148mm}{*}
+\settrims{6.41mm}{6.43mm}
+% \setstocksize{210mm}{148mm}
+% \settrimmedsize{210mm}{148mm}{*}
+% \settrims{0mm}{0mm}
+\setlrmarginsandblock{22mm}{22mm}{*}
+\setulmarginsandblock{20mm}{20mm}{*}
+\checkandfixthelayout
+
+% Typesetting details from
+% http://www.khirevich.com/latex/microtype/
+\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10]{microtype}
+\frenchspacing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Custom design elements %%%%%%%
+\newcommand{\chapterstart}[1]{%
+    \noindent\textsc{#1}%
+}
+
+\newcommand{\sectionrule}{%
+\begin{center}
+    $\infty$
+\end{center}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Chapter/section titles %%%%%%%
+\newcommand{\allsc}[1]{\textsc{\MakeLowercase{#1}}}
+\definecolor{mygray}{gray}{0.65}
+
+% Chapter titles:
+% Horizontal rule, chapter title in italics, horizontal rule
+% Based on the style 'daleif3' in http://tug.ctan.org/info/MemoirChapStyles/MemoirChapStyles.pdf
+\makeatletter
+\makechapterstyle{sunchapter}{
+    % don't print "Chapter ..."
+    \renewcommand\chapternamenum{}
+    \renewcommand\printchaptername{}
+    % don't print the chapter number
+    \renewcommand\printchapternum{}
+    \renewcommand\chapterheadstart{}
+    \renewcommand\afterchapternum{}
+    \renewcommand\afterchaptertitle{}
+    \renewcommand\printchaptertitle[1]{%
+    \begin{tikzpicture}[remember picture, overlay]%
+    \node at (current page.center) {\includegraphics{sunrays-inner.pdf}};%
+    \end{tikzpicture}%
+    \begin{center}%
+    \vspace{-7mm}%
+    \vfill%
+    {\LARGE\color{mygray}\allsc{##1}}%
+    \vfill%
+    \end{center}%
+    \newpage}
+}
+\makeatother
+\chapterstyle{sunchapter}
+
+% https://stackoverflow.com/a/1670572 (CC BY-SA 4.0)
+\newenvironment{changemargin}[2]{%
+\begin{list}{}{%
+\setlength{\topsep}{0pt}%
+\setlength{\leftmargin}{#1}%
+\setlength{\rightmargin}{#2}%
+\setlength{\listparindent}{\parindent}%
+\setlength{\itemindent}{\parindent}%
+\setlength{\parsep}{\parskip}%
+}%
+\item[]}{\end{list}}
+
+\newcommand{\chapteropener}[1]{%
+    \cleardoublepage%
+    \thispagestyle{empty}%
+    \begin{tikzpicture}[remember picture, overlay]%
+        \node at (current page.center) {\includegraphics{sunrays-outer.pdf}};%
+    \end{tikzpicture}%
+    \begin{changemargin}{1cm}{1cm}
+    % \vspace{-14mm}%
+    % \vfill%
+    \vspace{4mm}
+    #1
+    % \vfill%
+    \end{changemargin}%
+    \newpage
+}
+
+% Mid-height horizontal rules
+% Based on https://tex.stackexchange.com/a/451330 (CC BY-SA 4.0)
+\makeatletter
+\def\myrulefill#1#2{\leavevmode\leaders\hrule\@height#1\@depth#2\hfill \kern\z@}
+\makeatother
+\newcommand*\crulefilllower[1][0.4pt]{\myrulefill{\dimexpr(1ex+#1)/2}{\dimexpr(-1ex+#1)/2}}
+\newcommand*\crulefillupper[1][0.9pt]{\myrulefill
+    {\dimexpr(\fontcharht\font`X+#1)/2}{\dimexpr(-\fontcharht\font`X+#1)/2}}
+
+% Section titles:
+% Title in italics, between horizontal rules
+\titleformat{\section}{}{}{0pt}{\itshape\crulefilllower~#1~\crulefilllower}
+
+% Subsection titles:
+% Title in boldface
+\titleformat{\subsection}{}{}{0pt}{\bfseries#1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Headers/footers %%%%%%%
+% Even pages: book title in small caps
+% Odd pages: chapter title in italics
+% Based on https://tex.stackexchange.com/a/38449 (CC BY-SA 3.0)
+\nouppercaseheads
+\makepagestyle{mystyle} 
+\setlength{\headwidth}{\textwidth}
+\makerunningwidth{mystyle}{\headwidth}
+\makeevenhead{mystyle}{\thepage}{\allsc\booktitle}{} 
+\makeoddhead{mystyle}{}{\itshape\leftmark}{\thepage} 
+\makeatletter
+\makepsmarks{mystyle}{%
+  \createmark{chapter}{left}{nonumber}{}{}
+}
+\makeatother
+\pagestyle{mystyle}
+
+% No page numbers on chapter opening pages
+\makeoddfoot{plain}{}{}{}
+\chapterstyle{plain}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Front matter pages %%%%%%%
+% Half-title (page that contains just the title)
+\newcommand{\halftitlepage}[1][\booktitle]{
+    \vspace*{\fill}
+    \begin{center}
+    \Huge{\allsc{#1}}
+    \end{center}
+    \vspace{0.6\textheight}
+    \newpage
+    % Also add empty page
+    \null
+    \newpage
+}
+
+% Title page (styled like the cover)
+% - extra large font sizes
+\newcommand{\extrahuge}[1]{%
+    \fontsize{50}{60}\selectfont#1%
+}
+\newcommand{\veryhuge}[1]{%
+    \fontsize{35}{42}\selectfont#1%
+}
+% - the actual title page
+\newcommand{\titlepage}[2]{%
+    \begin{tikzpicture}[remember picture, overlay]%
+    \node at (current page.center) {\includegraphics{sunrays-title.pdf}};%
+    \end{tikzpicture}%
+\begin{center}
+    \vspace{1.5em}
+    {\Huge\color{white}\allsc{#1}}\\ % Book title
+    % {\Large #3}\\ % Designer
+    \vspace{\fill}
+    {\Huge\color{white}\allsc{#2}}\\ % Author
+    \vspace{2.7em}
+\end{center}
+\newpage
+}
+
+% Colophon page
+\newcommand{\colophonpage}[3]{
+\vspace*{\fill}
+\begin{center}
+\begin{minipage}{0.7\textwidth}
+    {\centering
+        {\large\textit{\booktitle}}\\
+        #1\\% "designed by..."
+    }
+    \sectionrule
+    #2  % main part
+    \sectionrule
+    {\centering
+    This is the \_\_\_ copy of this edition.\\
+    }
+\end{minipage}
+\end{center}
+\newpage
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Front matter style %%%%%%%
+% No page numbers in the front matter
+% https://tex.stackexchange.com/a/53491 (CC BY-SA 3.0)
+\makeatletter
+\aliaspagestyle{title}{empty}
+\let\origps@chapter\ps@chapter
+\preto\frontmatter{\let\ps@chapter\ps@empty\pagestyle{empty}}
+\preto\mainmatter{%
+  \cleardoublepage
+  \let\ps@chapter\origps@chapter\pagestyle{headings}}
+\makeatother
+
+% Table of contents:
+% - no chapter/section numbers
+\renewcommand{\chapternumberline}[1]{}
+\renewcommand{\thesection}{}
+% - dots for chapters
+\renewcommand{\cftchapterdotsep}{\cftdotsep}
+% - include subsections
+\setcounter{tocdepth}{2}
+% - indent subsections further
+\makeatletter
+\renewcommand*\l@subsection{\@dottedtocline{1}{6em}{0em}}
+\renewcommand*\l@subsection{\@dottedtocline{1}{6em}{0em}}
+% don't internally call \chapter{}, use a custom title:
+\renewcommand*{\@tocmaketitle}{%
+\begin{center}
+    {\LARGE\textsc{contents}}
+\end{center}}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Main matter %%%%%%%
+\newcommand{\startmainmatter}[1][7]{
+\mainmatter
+\pagestyle{mystyle}
+\setcounter{page}{#1}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Appendix %%%%%%%
+\newcommand{\startappendix}{
+\cleardoublepage
+\chapter{Appendix}
+\setcounter{page}{1}
+\pagenumbering{roman}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Hyphenation %%%%%%%
+% Minimum extra line length before the compiler starts complaining
+\hfuzz=2.2pt
+% Ways to fix line breaks:
+% - \\
+% - \allowbreak{}
+% - \- (inserts hyphen if LaTeX breaks the line)
+% - \mbox{ ... } (no break!)
+% - ~ (non-breaking space)
+
+% Use these when custom hyphenation doesn't do the trick.
+% They stretch the whitespace in otherwise too short lines
+% (include up to the word before the one that's overlong).
+\newcommand{\spreadlinepar}[1]{%
+\makebox[\dimexpr\linewidth-\parindent][s]{#1}\\%
+}
+\newcommand{\spreadlinemid}[1]{%
+\makebox[\dimexpr\linewidth][s]{#1}\\%
+}
+\newcommand{\spreadlinetop}[1]{%
+\noindent\spreadlinemid{#1}%
+}
+
+
+\hyphenation{blue-print} % etc.
+% Where this isn't enough, use /- to indicate possible splits.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Custom %%%%%%%
+\newcommand{\annika}{{\swshape A}nnika}
+\newcommand{\abnormal}{\adjustbox{trim = 0pt 0pt 1.1pt 0pt, clip}{\swshape A}\hspace{-1mm}\textit{B}}
+\newcommand{\vbnormal}{{\bfseries\vbnormalthin}}
+\newcommand{\vbnormalthin}{\adjustbox{trim = 0pt 0.1pt 3.4pt 0pt, clip}{V}\hspace{-0.5mm}\textit{B}}
+\newcommand{\vbhuge}{{\bfseries\adjustbox{trim = 0pt 0.2pt 6pt 0pt, clip}{V}\hspace{-1.1mm}\textit{B}}}
+\newcommand{\vbLarge}{{\bfseries\adjustbox{trim = 0pt 0.2pt 4pt 0pt, clip}{V}\hspace{-0.8mm}\itshape B}}
+%%%%%%%%%%%%%%%%%%%%%%
+
+\endinput
