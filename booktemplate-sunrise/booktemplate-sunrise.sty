@@ -24,7 +24,16 @@
 
 % Typesetting details from
 % http://www.khirevich.com/latex/microtype/
-\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10]{microtype}
+\usepackage[activate={true,nocompatibility},
+    final,
+    tracking=true,
+    kerning=true,
+    spacing=true,
+    factor=1100,
+    stretch=10,
+    shrink=10,
+    letterspace=-60 % for \textls, used in chapter titles
+    ]{microtype}
 \frenchspacing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -66,7 +75,7 @@
     \begin{center}%
     \vspace{-7mm}%
     \vfill%
-    {\LARGE\color{mygray}\allsc{##1}}%
+    {\huge\color{mygray}\textls{\allsc{##1}}}%
     \vfill%
     \end{center}%
     \newpage}
@@ -118,6 +127,8 @@
 % Subsection titles:
 % Title in boldface
 \titleformat{\subsection}{}{}{0pt}{\bfseries#1}
+% Paragraph/TOC titles:
+\titleformat{\paragraph}{}{}{0pt}{\centering\LARGE\allsc{#1}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -227,12 +238,17 @@
 % - indent subsections further
 \makeatletter
 \renewcommand*\l@subsection{\@dottedtocline{1}{6em}{0em}}
-\renewcommand*\l@subsection{\@dottedtocline{1}{6em}{0em}}
 % don't internally call \chapter{}, use a custom title:
-\renewcommand*{\@tocmaketitle}{%
-\begin{center}
-    {\LARGE\textsc{contents}}
-\end{center}}
+% \renewcommand*{\@tocmaketitle}{%
+%     \begin{center}
+%         {\LARGE\textsc{contents}}
+%     \end{center}
+% }
+\renewcommand\@tocmaketitle{%
+  % using subparagraph since it's unlikely to be used in the actual book
+  \subparagraph*{contents}
+%   \tocmark%
+  \@afterheading}
 \makeatother
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -283,15 +299,5 @@
 \hyphenation{blue-print} % etc.
 % Where this isn't enough, use /- to indicate possible splits.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%%%%%%% Custom %%%%%%%
-\newcommand{\annika}{{\swshape A}nnika}
-\newcommand{\abnormal}{\adjustbox{trim = 0pt 0pt 1.1pt 0pt, clip}{\swshape A}\hspace{-1mm}\textit{B}}
-\newcommand{\vbnormal}{{\bfseries\vbnormalthin}}
-\newcommand{\vbnormalthin}{\adjustbox{trim = 0pt 0.1pt 3.4pt 0pt, clip}{V}\hspace{-0.5mm}\textit{B}}
-\newcommand{\vbhuge}{{\bfseries\adjustbox{trim = 0pt 0.2pt 6pt 0pt, clip}{V}\hspace{-1.1mm}\textit{B}}}
-\newcommand{\vbLarge}{{\bfseries\adjustbox{trim = 0pt 0.2pt 4pt 0pt, clip}{V}\hspace{-0.8mm}\itshape B}}
-%%%%%%%%%%%%%%%%%%%%%%
 
 \endinput
