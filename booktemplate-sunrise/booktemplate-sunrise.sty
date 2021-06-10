@@ -2,6 +2,8 @@
 \ProvidesPackage{booktemplate-sunrise}
 \RequirePackage[explicit]{titlesec}
 \RequirePackage{ebgaramond}
+% \RequirePackage{montserrat}
+\RequirePackage{titlesec}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[english]{babel}
 \RequirePackage[T1]{fontenc}
@@ -12,14 +14,14 @@
 \RequirePackage[framemethod=tikz]{mdframed}
 
 %%%%%%% Page size and general typesetting %%%%%%%
-\setstocksize{216.41mm}{154.43mm}
-\settrimmedsize{210mm}{148mm}{*}
-\settrims{6.41mm}{6.43mm}
-% \setstocksize{210mm}{148mm}
+% \setstocksize{216.41mm}{154.43mm}
 % \settrimmedsize{210mm}{148mm}{*}
-% \settrims{0mm}{0mm}
-\setlrmarginsandblock{22mm}{22mm}{*}
-\setulmarginsandblock{20mm}{20mm}{*}
+% \settrims{6.41mm}{6.43mm}
+\setstocksize{210mm}{148mm}
+\settrimmedsize{210mm}{148mm}{*}
+\settrims{0mm}{0mm}
+\setlrmarginsandblock{20mm}{20mm}{*}
+\setulmarginsandblock{18mm}{18mm}{*}
 \checkandfixthelayout
 
 % Typesetting details from
@@ -41,6 +43,7 @@
 %%%%%%% Custom design elements %%%%%%%
 \newcommand{\chapterstart}[1]{%
     \noindent\textsc{#1}%
+    % \noindent{\sffamily\textsc{#1}}%
 }
 
 \newcommand{\sectionrule}{%
@@ -76,6 +79,7 @@
     \vspace{-7mm}%
     \vfill%
     {\huge\color{mygray}\textls{\allsc{##1}}}%
+    % {\LARGE\color{mygray}\textls{\sffamily\allsc{##1}}}%
     \vfill%
     \end{center}%
     \cleardoublepage
@@ -102,12 +106,9 @@
     \begin{tikzpicture}[remember picture, overlay]%
         \node at (current page.center) {\includegraphics{sunrays-outer.pdf}};%
     \end{tikzpicture}%
-    \begin{changemargin}{1cm}{1cm}
-    % \vspace{-14mm}%
-    % \vfill%
-    \vspace{4mm}
+    \begin{changemargin}{7mm}{7mm}
+    \vspace{0.417\textheight}
     #1
-    % \vfill%
     \end{changemargin}%
     \newpage
 }
@@ -124,12 +125,14 @@
 % Section titles:
 % Title in italics, between horizontal rules
 \titleformat{\section}{}{}{0pt}{\itshape\crulefilllower~#1~\crulefilllower}
+% \titleformat{\section}{}{}{0pt}{\sffamily\crulefilllower~#1~\crulefilllower}
 
 % Subsection titles:
 % Title in boldface
 \titleformat{\subsection}{}{}{0pt}{\bfseries#1}
 % Paragraph/TOC titles:
 \titleformat{\paragraph}{}{}{0pt}{\centering\LARGE\allsc{#1}}
+% \titleformat{\paragraph}{}{}{0pt}{\sffamily\centering\LARGE\allsc{#1}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -141,7 +144,8 @@
 \makepagestyle{mystyle} 
 \setlength{\headwidth}{\textwidth}
 \makerunningwidth{mystyle}{\headwidth}
-\makeevenhead{mystyle}{\thepage}{\allsc\booktitle}{} 
+\makeevenhead{mystyle}{\thepage}{\allsc\booktitle}{}
+% \makeevenhead{mystyle}{\thepage}{\sffamily\allsc\booktitle}{}
 \makeoddhead{mystyle}{}{\itshape\leftmark}{\thepage} 
 \makeatletter
 \makepsmarks{mystyle}{%
@@ -295,8 +299,7 @@
 \noindent\spreadlinemid{#1}%
 }
 
-
-\hyphenation{blue-print} % etc.
+\hyphenation{blue-print}
 % Where this isn't enough, use /- to indicate possible splits.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 

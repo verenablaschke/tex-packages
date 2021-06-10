@@ -1,8 +1,10 @@
 \documentclass{article}
 \usepackage{tikz}
 \usepackage[
-    paperwidth=12.85cm,
-    paperheight=18.25cm,
+    % paperwidth=13.51cm,
+    % paperheight=19.27cm,
+    paperwidth=148mm,
+    paperheight=210mm,
     margin=0cm,
     ]{geometry}
 \definecolor{bgcol}{gray}{0.65}
@@ -12,6 +14,8 @@
 \begin{document}%
 \begin{tikzpicture}[remember picture,overlay,shift={(current page.center)}]
     \begin{scope}
+    \clip(-6.755,-9.635) rectangle ++(13.485,19.27);
+
         %% -----
         %% Option B:
         %% outer frame, inverted colours
@@ -23,20 +27,19 @@
         %% -----
         %% Options B & C:
         %% continued at the end of the file!!
-        % \fill[bgcol] (-6.4,-9.1) rectangle ++(12.8,18.2);
+        \fill[bgcol] (-6.73,-9.61) rectangle ++(13.46,19.22);
         %% -----
     
         %% -----
         %% Option A:
         %% inner picture with sun
-        \clip(-5.425,-7.725) rectangle ++(10.85,15.45);
-        \fill[bgcol] (-5.4,-7.7) rectangle ++(10.8,15.4);
+        % \clip(-5.625,-8.025) rectangle ++(11.25,16.05);
+        % \fill[bgcol] (-5.6,-8.0) rectangle ++(11.2,16.80);
         %% -----
 
         \foreach \a in {0, 10,...,359}
-          \draw[line width=\linebreadth,maincol] (\a:1) -- (\a:12); 
-        % \foreach \r in {2.75, 3.65,...,13}
-        \foreach \r in {2.3, 2.75 ,...,13}
+          \draw[line width=\linebreadth, maincol] (\a:1) -- (\a:12); 
+        \foreach \r in {2.33, 2.81 ,...,13}
           \draw[bgcol, line width=2mm] (0,0) circle (\r);
         \foreach \a in {5, 15,...,359}
           \draw[line width=\linebreadth,maincol] (\a:1) -- (\a:12);
@@ -44,28 +47,28 @@
         \fill[maincol] (0,0) circle(19mm);
         \draw[bgcol, line width=\linebreadth] (0,0) circle (1.75);
         
-        \draw[line width=\linebreadth,draw=maincol] (-5.4,-7.7) rectangle ++(10.8,15.4);
-        \draw[line width=\linebreadth,draw=maincol] (-6.4,-9.1) rectangle ++(12.8,18.2);
+        \draw[line width=\linebreadth,draw=maincol] (-5.6,-8.0) rectangle ++(11.2,16.0);
+        \draw[line width=\linebreadth,draw=maincol] (-6.73,-9.61) rectangle ++(13.46,19.22);
         
         %% -----
         %% Option B:
         %% outer frame, inverted colours
-        % \fill[bgcol] (-5.375,-7.675) rectangle ++(10.75,15.35);
+        % \fill[bgcol] (-5.575,-7.975) rectangle ++(11.15,15.95);
         %% -----
         
         %% -----
         %% Option C:
         %% outer frame, sun in the centre
-        % \fill[bgcol] (-5.375,-7.675) rectangle ++(10.75,15.35);
-        % \foreach \a in {0, 10,...,359}
-        %   \draw[line width=\linebreadth,maincol] (\a:2) -- (\a:3.7); 
-        % \foreach \r in {2.75, 3.65,...,4}
-        % \foreach \r in {2.75, 3.2,...,4}
-        %   \draw[bgcol, line width=2.5mm] (0,0) circle (\r);
-        % \foreach \a in {5, 15,...,359}
-        %   \draw[line width=\linebreadth,maincol] (\a:2) -- (\a:3.5); 
-        % \fill[maincol] (0,0) circle(19mm);
-        % \draw[bgcol, line width=\linebreadth] (0,0) circle (1.75);
+        \fill[bgcol] (-5.575,-7.975) rectangle ++(11.15,15.95);
+        \foreach \a in {0, 10,...,359}
+          \draw[line width=\linebreadth,maincol] (\a:2) -- (\a:3.7); 
+        \foreach \r in {2.75, 3.65,...,4}
+        \foreach \r in {2.75, 3.2,...,4}
+          \draw[bgcol, line width=2.5mm] (0,0) circle (\r);
+        \foreach \a in {5, 15,...,359}
+          \draw[line width=\linebreadth,maincol] (\a:2) -- (\a:3.5); 
+        \fill[maincol] (0,0) circle(19mm);
+        \draw[bgcol, line width=\linebreadth] (0,0) circle (1.75);
         %% -----
         
     \end{scope}
