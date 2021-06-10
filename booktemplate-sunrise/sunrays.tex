@@ -1,3 +1,18 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Frame options:
+% - A: inner frame with sun
+% - B: outer frame, inverted colours
+% - C: outer frame, sun in the centre
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Ray options:
+% - 1: (most dashes)
+% - 2
+% - 3: (fewest dashes)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% sunrays-inner.pdf: A2
+% sunrays-outer.pdf: B2
+% sunrays-title.pdf: C2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass{article}
 \usepackage{tikz}
 \usepackage[
@@ -11,14 +26,20 @@
 \definecolor{maincol}{gray}{1}
 \newlength\linebreadth
 \setlength\linebreadth{0.5mm}
+
+\tikzset{
+    busydash/.style={dash=on 4mm off 2mm phase 4.35mm},
+    calmdash/.style={dash=on 10mm off 2mm phase 10.35mm},
+    calmdash2/.style={dash=on 10mm off 2mm phase 6.3mm},
+    }
 \begin{document}%
 \begin{tikzpicture}[remember picture,overlay,shift={(current page.center)}]
     \begin{scope}
-    \clip(-6.755,-9.635) rectangle ++(13.485,19.27);
+    \clip(-6.755,-9.635) rectangle ++(13.51,19.27);
 
         %% -----
         %% Option B:
-        %% outer frame, inverted colours
+        %% invert colours
         %% continued at the end of the file!!
         % \definecolor{maincol}{gray}{0.25}
         % \definecolor{bgcol}{gray}{1}
@@ -26,50 +47,69 @@
         
         %% -----
         %% Options B & C:
-        %% continued at the end of the file!!
-        \fill[bgcol] (-6.73,-9.61) rectangle ++(13.46,19.22);
+        %% background colour in outer frame
+        % \fill[bgcol] (-6.73,-9.61) rectangle ++(13.46,19.22);
         %% -----
     
         %% -----
         %% Option A:
-        %% inner picture with sun
-        % \clip(-5.625,-8.025) rectangle ++(11.25,16.05);
-        % \fill[bgcol] (-5.6,-8.0) rectangle ++(11.2,16.80);
+        %% inner frame
+        \clip(-5.625,-8.025) rectangle ++(11.25,16.05);
+        \fill[bgcol] (-5.6,-8.0) rectangle ++(11.2,16.80);
         %% -----
 
+        %% draw rays
+        %% Option 1
+        % \foreach \a in {5, 15,...,359}
+        %   \draw[calmdash2, line width=\linebreadth, maincol] (\a:1.8) -- (\a:12);
+        %% Options 1 & 2
         \foreach \a in {0, 10,...,359}
-          \draw[line width=\linebreadth, maincol] (\a:1) -- (\a:12); 
-        \foreach \r in {2.33, 2.81 ,...,13}
-          \draw[bgcol, line width=2mm] (0,0) circle (\r);
+            \draw[busydash, line width=\linebreadth, maincol] (\a:2.5) -- (\a:12);
+        %% Options 2 & 3
         \foreach \a in {5, 15,...,359}
-          \draw[line width=\linebreadth,maincol] (\a:1) -- (\a:12);
+          \draw[line width=\linebreadth,maincol] (\a:1.8) -- (\a:12);
+        %% Option 3
+        % \foreach \a in {0, 10,...,359}
+        %     \draw[calmdash, line width=\linebreadth, maincol] (\a:2.5) -- (\a:12);
           
-        \fill[maincol] (0,0) circle(19mm);
-        \draw[bgcol, line width=\linebreadth] (0,0) circle (1.75);
+        %% circles and inner rays
+        \draw[maincol, line width=1.2mm] (0,0) circle (18.4mm);
+        \fill[maincol] (0,0) circle(17.2mm);
+        \foreach \a in {0, 10,...,359}
+            \draw[line width=\linebreadth, maincol] (\a:1.8) -- (\a:2.47);
         
+        %% draw frames
         \draw[line width=\linebreadth,draw=maincol] (-5.6,-8.0) rectangle ++(11.2,16.0);
         \draw[line width=\linebreadth,draw=maincol] (-6.73,-9.61) rectangle ++(13.46,19.22);
         
         %% -----
         %% Option B:
-        %% outer frame, inverted colours
+        % outer frame (hide centre)
         % \fill[bgcol] (-5.575,-7.975) rectangle ++(11.15,15.95);
         %% -----
         
-        %% -----
-        %% Option C:
-        %% outer frame, sun in the centre
-        \fill[bgcol] (-5.575,-7.975) rectangle ++(11.15,15.95);
-        \foreach \a in {0, 10,...,359}
-          \draw[line width=\linebreadth,maincol] (\a:2) -- (\a:3.7); 
-        \foreach \r in {2.75, 3.65,...,4}
-        \foreach \r in {2.75, 3.2,...,4}
-          \draw[bgcol, line width=2.5mm] (0,0) circle (\r);
-        \foreach \a in {5, 15,...,359}
-          \draw[line width=\linebreadth,maincol] (\a:2) -- (\a:3.5); 
-        \fill[maincol] (0,0) circle(19mm);
-        \draw[bgcol, line width=\linebreadth] (0,0) circle (1.75);
-        %% -----
+        % %% -----
+        % %% Option C:
+        % %% outer frame, sun in the centre
+        % \fill[bgcol] (-5.575,-7.975) rectangle ++(11.15,15.95);
+        % %% Option 1
+        % % \foreach \a in {5, 15,...,359}
+        % %   \draw[calmdash2, line width=\linebreadth, maincol] (\a:1.8) -- (\a:3.7);
+        % %% Options 1, 2
+        % \foreach \a in {0, 10,...,359}
+        %     \draw[busydash, line width=\linebreadth, maincol] (\a:2.5) -- (\a:3.7);
+        % %% Options 2, 3
+        % \foreach \a in {5, 15,...,359}
+        %   \draw[line width=\linebreadth,maincol] (\a:1.8) -- (\a:3.7);
+        % %% Option 3
+        % % \foreach \a in {0, 10,...,359}
+        % %     \draw[calmdash, line width=\linebreadth, maincol] (\a:2.5) -- (\a:3.7);
+        % %% circles and inner rays
+        % \draw[maincol, line width=1.2mm] (0,0) circle (18.4mm);
+        % \fill[maincol] (0,0) circle(17.2mm);
+        % \foreach \a in {0, 10,...,359}
+        %     \draw[line width=\linebreadth, maincol] (\a:1.8) -- (\a:2.47);
+        % %% -----
         
     \end{scope}
 \end{tikzpicture}
