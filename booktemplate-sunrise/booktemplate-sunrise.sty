@@ -14,12 +14,12 @@
 \RequirePackage[framemethod=tikz]{mdframed}
 
 %%%%%%% Page size and general typesetting %%%%%%%
-% \setstocksize{216.41mm}{154.43mm}
-% \settrimmedsize{210mm}{148mm}{*}
-% \settrims{6.41mm}{6.43mm}
-\setstocksize{210mm}{148mm}
+\setstocksize{216.41mm}{154.43mm}
 \settrimmedsize{210mm}{148mm}{*}
-\settrims{0mm}{0mm}
+\settrims{6.41mm}{6.43mm}
+% \setstocksize{210mm}{148mm}
+% \settrimmedsize{210mm}{148mm}{*}
+% \settrims{0mm}{0mm}
 \setlrmarginsandblock{20mm}{20mm}{*}
 \setulmarginsandblock{18mm}{18mm}{*}
 \checkandfixthelayout
@@ -118,13 +118,13 @@
 \makeatletter
 \def\myrulefill#1#2{\leavevmode\leaders\hrule\@height#1\@depth#2\hfill \kern\z@}
 \makeatother
-\newcommand*\crulefilllower[1][0.4pt]{\myrulefill{\dimexpr(1ex+#1)/2}{\dimexpr(-1ex+#1)/2}}
-\newcommand*\crulefillupper[1][0.9pt]{\myrulefill
+\newcommand*\crulefilllower[1][1pt]{\myrulefill{\dimexpr(1ex+#1)/2}{\dimexpr(-1ex+#1)/2}}
+\newcommand*\crulefillupper[1][1pt]{\myrulefill
     {\dimexpr(\fontcharht\font`X+#1)/2}{\dimexpr(-\fontcharht\font`X+#1)/2}}
 
 % Section titles:
 % Title in italics, between horizontal rules
-\titleformat{\section}{}{}{0pt}{\itshape\crulefilllower~#1~\crulefilllower}
+\titleformat{\section}{}{}{0pt}{\itshape\crulefilllower~~~#1~~~\crulefilllower}
 % \titleformat{\section}{}{}{0pt}{\sffamily\crulefilllower~#1~\crulefilllower}
 
 % Subsection titles:
@@ -167,7 +167,7 @@
     \begin{center}
     \Huge{\allsc{#1}}
     \end{center}
-    \vspace{0.6\textheight}
+    \vspace{0.5\textheight}
     \newpage
     % Also add empty page
     \null
