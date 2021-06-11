@@ -48,14 +48,14 @@
         %% -----
         %% Options B & C:
         %% background colour in outer frame
-        % \fill[bgcol] (-6.73,-9.61) rectangle ++(13.46,19.22);
+        \fill[bgcol] (-6.73,-9.61) rectangle ++(13.46,19.22);
         %% -----
     
         %% -----
         %% Option A:
         %% inner frame
-        \clip(-5.625,-8.025) rectangle ++(11.25,16.05);
-        \fill[bgcol] (-5.6,-8.0) rectangle ++(11.2,16.80);
+        % \clip(-5.625,-8.025) rectangle ++(11.25,16.05);
+        % \fill[bgcol] (-5.6,-8.0) rectangle ++(11.2,16.80);
         %% -----
 
         %% draw rays
@@ -88,28 +88,28 @@
         % \fill[bgcol] (-5.575,-7.975) rectangle ++(11.15,15.95);
         %% -----
         
-        % %% -----
-        % %% Option C:
-        % %% outer frame, sun in the centre
-        % \fill[bgcol] (-5.575,-7.975) rectangle ++(11.15,15.95);
-        % %% Option 1
-        % % \foreach \a in {5, 15,...,359}
-        % %   \draw[calmdash2, line width=\linebreadth, maincol] (\a:1.8) -- (\a:3.7);
-        % %% Options 1, 2
-        % \foreach \a in {0, 10,...,359}
-        %     \draw[busydash, line width=\linebreadth, maincol] (\a:2.5) -- (\a:3.7);
-        % %% Options 2, 3
+        %% -----
+        %% Option C:
+        %% outer frame, sun in the centre
+        \fill[bgcol] (-5.575,-7.975) rectangle ++(11.15,15.95);
+        %% Option 1
         % \foreach \a in {5, 15,...,359}
-        %   \draw[line width=\linebreadth,maincol] (\a:1.8) -- (\a:3.7);
-        % %% Option 3
-        % % \foreach \a in {0, 10,...,359}
-        % %     \draw[calmdash, line width=\linebreadth, maincol] (\a:2.5) -- (\a:3.7);
-        % %% circles and inner rays
-        % \draw[maincol, line width=1.2mm] (0,0) circle (18.4mm);
-        % \fill[maincol] (0,0) circle(17.2mm);
+        %   \draw[calmdash2, line width=\linebreadth, maincol] (\a:1.8) -- (\a:3.7);
+        %% Options 1, 2
+        \foreach \a in {0, 10,...,359}
+            \draw[busydash, line width=\linebreadth, maincol] (\a:2.5) -- (\a:3.66);
+        %% Options 2, 3
+        \foreach \a in {5, 15,...,359}
+          \draw[line width=\linebreadth,maincol] (\a:1.8) -- (\a:3.66);
+        %% Option 3
         % \foreach \a in {0, 10,...,359}
-        %     \draw[line width=\linebreadth, maincol] (\a:1.8) -- (\a:2.47);
-        % %% -----
+        %     \draw[calmdash, line width=\linebreadth, maincol] (\a:2.5) -- (\a:3.7);
+        %% circles and inner rays
+        \draw[maincol, line width=1.2mm] (0,0) circle (18.4mm);
+        \fill[maincol] (0,0) circle(17.2mm);
+        \foreach \a in {0, 10,...,359}
+            \draw[line width=\linebreadth, maincol] (\a:1.8) -- (\a:2.47);
+        %% -----
         
     \end{scope}
 \end{tikzpicture}
