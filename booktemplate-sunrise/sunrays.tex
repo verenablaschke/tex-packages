@@ -7,7 +7,8 @@
 % Ray options:
 % - 1: (most dashes)
 % - 2
-% - 3: (fewest dashes)
+% - 3: 
+% - 4: (no dashes)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % sunrays-inner.pdf: A2
 % sunrays-outer.pdf: B2
@@ -65,12 +66,15 @@
         %% Options 1 & 2
         \foreach \a in {0, 10,...,359}
             \draw[busydash, line width=\linebreadth, maincol] (\a:2.5) -- (\a:12);
-        %% Options 2 & 3
+        %% Options 2, 3, 4
         \foreach \a in {5, 15,...,359}
           \draw[line width=\linebreadth,maincol] (\a:1.8) -- (\a:12);
         %% Option 3
         % \foreach \a in {0, 10,...,359}
         %     \draw[calmdash, line width=\linebreadth, maincol] (\a:2.5) -- (\a:12);
+        %% Option 4
+        % \foreach \a in {0, 10,...,359}
+        %     \draw[line width=\linebreadth, maincol] (\a:2.5) -- (\a:12);
           
         %% circles and inner rays
         \draw[maincol, line width=1.2mm] (0,0) circle (18.4mm);
@@ -98,12 +102,15 @@
         %% Options 1, 2
         \foreach \a in {0, 10,...,359}
             \draw[busydash, line width=\linebreadth, maincol] (\a:2.5) -- (\a:3.66);
-        %% Options 2, 3
+        %% Options 2, 3 & 4
         \foreach \a in {5, 15,...,359}
           \draw[line width=\linebreadth,maincol] (\a:1.8) -- (\a:3.66);
         %% Option 3
         % \foreach \a in {0, 10,...,359}
         %     \draw[calmdash, line width=\linebreadth, maincol] (\a:2.5) -- (\a:3.7);
+        %% Option 4
+        % \foreach \a in {0, 10,...,359}
+        %     \draw[line width=\linebreadth, maincol] (\a:2.5) -- (\a:3.7);
         %% circles and inner rays
         \draw[maincol, line width=1.2mm] (0,0) circle (18.4mm);
         \fill[maincol] (0,0) circle(17.2mm);

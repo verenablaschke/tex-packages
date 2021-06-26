@@ -2,7 +2,7 @@
 
 Lettrinebox creates a box typeset in [EB Garamond](http://www.georgduffner.at/ebgaramond/index.html), with several of the historical font variants activated.
 It mostly acts as a wrapper around the [coloredlettrine](https://github.com/raphink/coloredlettrine) package, which creates a decorated dropped initial in two colours of your choosing.
-At the moment, there exist only decorated initials for *A*, *G* anf *T*, so you might need to apply some Oulipian constraints to your writing.
+At the moment, there only exist decorated initials for *A*, *G* anf *T*, so you might need to apply some Oulipian constraints to your writing.
 
 The contents of `EBGaramond-0.016` are developed by Georg Duffner and licensed under the [SIL Open Fonts License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL).
 The file `coloredlettrine.sty` was compiled using the code in Raphaël Pinson's package repository and is licensed under the [LaTeX Project Public License](http://www.latex-project.org/lppl.txt).
