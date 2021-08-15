@@ -14,24 +14,19 @@
 %%%%%%% Page size, font, general typesetting %%%%%%%
 \setstocksize{216.41mm}{154.43mm}
 \settrimmedsize{210mm}{148mm}{*}
-%% 3.2 mm (top), 6.43 (left or right), 3.21 mm (bottom)
-\settrims{3.2mm}{6.43mm}
+\settrims{3.2mm}{3.21mm}
 
-%% To check what this looks like sans trims:
+%% to check what this looks like sans trims
 % \setstocksize{210mm}{148mm}
 % \settrimmedsize{210mm}{148mm}{*}
 % \settrims{0mm}{0mm}
-
-% To see the outlines of the trims, use the memoir class's
-% `showtrims' option in your main tex file:
-% \documentclass[11pt,showtrims]{memoir}
 
 \setlrmarginsandblock{20mm}{20mm}{*}
 \setulmarginsandblock{18mm}{18mm}{*}
 \checkandfixthelayout
 
-%% Typesetting details
-% via http://www.khirevich.com/latex/microtype/
+% Typesetting details from
+% http://www.khirevich.com/latex/microtype/
 \usepackage[activate={true,nocompatibility},
     final,
     tracking=true,
@@ -40,7 +35,7 @@
     factor=1100,
     stretch=10,
     shrink=10,
-    letterspace=0 % used for small caps; the results look very different with pdflatex and lualatex!
+    letterspace=0 % used in small caps; the results look very different with pdflatex and lualatex
     ]{microtype}
 \frenchspacing
 
@@ -65,11 +60,9 @@
     SmallCapsFont=*12-AllSC,
     Numbers=OldStyle,
     RawFeature={
-        %% Ligatures:
         +dlig, % T+h
         +hlig, % s+t, c+t and italic s+p, s+k 
-        %% Swashes (only exist for text in italics):
-        +swsh,
+        +swsh, % swashes
         },
     Renderer=Basic
 ]
@@ -95,44 +88,35 @@
 \newcommand{\allsc}[1]{\textsc{\MakeLowercase{#1}}}
 \definecolor{mygray}{gray}{0.65}
 
-%% Chapter titles:
-%% Page 1) 
-%% Background image + centered chapter title
+% Chapter titles:
 \makeatletter
 \newcommand{\chapterbgpage}[1]{
-    % Don't print "Chapter"
+    % don't print "Chapter ..."
     \renewcommand\chapternamenum{}
     \renewcommand\printchaptername{}
-    % Don't print the chapter number
+    % don't print the chapter number
     \renewcommand\printchapternum{}
     \renewcommand\chapterheadstart{}
     \renewcommand\afterchapternum{}
     \renewcommand\afterchaptertitle{}
-    \renewcommand\printchaptertitle[1]{%
+    \renewcommand\printchaptertitle[1]{
     \begin{tikzpicture}[remember picture, overlay]
-    \node at (current page.center) {\includegraphics{#1}};
+    \node at (54mm, -83.2mm) {\includegraphics{#1}};
+    \node[shape=circle] at (54mm, -83.2mm) {\huge\color{mygray}\textls{\allsc{##1}}};
     \end{tikzpicture}
-    \begin{center}%
-    \vfill%
-    {\huge\color{mygray}\textls{\allsc{##1}}}%
-    \vfill%
-    \end{center}%
     \cleardoublepage
     }
 }
 \makechapterstyle{sunchapter}{%
     \chapterbgpage{sunrays-inner.pdf}%
 }
-%% Add any other chapter backgrounds here:
-% \makechapterstyle{namehere-chapter}{%
-%     \chapterbgpage{file-name.pdf}%
-% }
+% Also possible with other background pictures, e.g.:
+\makechapterstyle{seachapter}{%
+    \chapterbgpage{sea-inner.pdf}%
+}
 \makeatother
 \chapterstyle{sunchapter}
 
-%% Page 2)
-%% Background image frame, text inside the frame and in the bottom half of the page
-% Change the margins so the text stays inside the frame:
 % https://stackoverflow.com/a/1670572 (CC BY-SA 4.0)
 \newenvironment{changemargin}[2]{%
 \begin{list}{}{%
@@ -145,22 +129,31 @@
 }%
 \item[]}{\end{list}}
 
-% Call \chapteropener{text here} for the default version
-% or optionally specify a different background file.
 \newcommand{\chapteropener}[2][sunrays-outer.pdf]{%
     \cleardoublepage%
     \thispagestyle{empty}%
     \begin{tikzpicture}[remember picture, overlay]%
-        \node at (current page.center) {\includegraphics{#1}};%
+        \node at (48mm, -83.2mm) {\includegraphics{#1}};%
     \end{tikzpicture}%
     \begin{changemargin}{7mm}{7mm}
-    \vspace{0.435\textheight}
+    \vspace{0.4173\textheight}
     #2
     \end{changemargin}%
     \newpage
 }
 
-%% Section title
+\newcommand{\sectionspace}[2]{%
+    \newpage\sectionspacenonewpage{#1}{#2}}
+
+\newcommand{\sectionspacenonewpage}[2]{%
+    \vspace*{0.4237\textheight}
+    \enlargethispage{\baselineskip}
+    \section{#1}
+    \thispagestyle{empty}
+    #2
+    \vfill{}
+    \newpage}
+
 % Mid-height horizontal rules
 % Based on https://tex.stackexchange.com/a/451330 (CC BY-SA 4.0)
 \makeatletter
@@ -169,13 +162,14 @@
 \newcommand*\crulefilllower[1][1pt]{\myrulefill{\dimexpr(1ex+#1)/2}{\dimexpr(-1ex+#1)/2}}
 \newcommand*\crulefillupper[1][1pt]{\myrulefill
     {\dimexpr(\fontcharht\font`X+#1)/2}{\dimexpr(-\fontcharht\font`X+#1)/2}}
-% Section title in fancy italics, between horizontal lines
+
+% Section titles:
+% Title in italics, between horizontal rules
 \titleformat{\section}{}{}{0pt}{\crulefilllower~~~\fancyit{#1}~~~\crulefilllower}
-
-%% Subsection title: horizontally centered
+% Subsection titles:
+% Title in boldface
 \titleformat{\subsection}{}{}{0pt}{\centering#1}
-
-%% Paragraph title (used for TOC header!)
+% Paragraph/TOC titles:
 \titleformat{\paragraph}{}{}{0pt}{\centering\LARGE\allsc{#1}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -204,17 +198,17 @@
 
 
 %%%%%%% Front matter pages %%%%%%%
-%% Half-title (page that contains just the title)
+% Half-title (page that contains just the title)
 \newcommand{\halftitlepage}[1][\booktitle]{
     \vspace*{0.4\textheight}
     \begin{center}
     \Huge{\allsc{#1}}
     \end{center}
+    % \vspace{\fill}
     \newpage
 }
 
-%% "Other books in this series" page
-% (Replaces frontispiece)
+% Replaces frontispiece:
 \newcommand{\otherbookspage}[2]{
     \vspace*{0.428\textheight}%
     \begin{center}%
@@ -226,30 +220,69 @@
     \newpage
 }
 
-%% Title page (styled like the cover)
+% Title page (styled like the cover)
+% - extra large font sizes
+\newcommand{\extrahuge}[1]{%
+    \fontsize{50}{60}\selectfont#1%
+}
+\newcommand{\veryhuge}[1]{%
+    \fontsize{35}{42}\selectfont#1%
+}
+% - the actual title page
 \newcommand{\titlepage}[2]{%
     \cleardoublepage%
     \begin{tikzpicture}[remember picture, overlay]%
-    \node at (current page.center) {\includegraphics{sunrays-title.pdf}};%
+    \node at (48mm, -83.2mm) {\includegraphics{sunrays-title.pdf}};%
     \end{tikzpicture}%
 \begin{center}
-    \vspace{2.2em}
+    \vspace{5mm}
     {\Huge\color{white}\allsc{#1}}\\ % Book title
     \vspace{\fill}
     {\Huge\color{white}\allsc{#2}}\\ % Author
-    \vspace{2.2em}
+    \vspace{10mm}
+\end{center}
+\newpage
+}
+\newcommand{\titlepagetwolines}[3]{%
+    \cleardoublepage%
+    \begin{tikzpicture}[remember picture, overlay]%
+    \node at (48mm, -83.2mm) {\includegraphics{sunrays-title.pdf}};%
+    \end{tikzpicture}%
+\begin{center}
+    \vspace{5mm}
+    {\Huge\color{white}\allsc{#1}}\\ % Book title line 1
+    \vspace{1mm}
+    {\Huge\color{white}\allsc{#2}}\\ % Book title line 2
+    \vspace{\fill}
+    {\Huge\color{white}\allsc{#3}}\\ % Author
+    \vspace{10mm}
+\end{center}
+\newpage
+}
+% Apostrophe in the title?
+\newcommand{\titlepageapostrophe}[2]{%
+    \cleardoublepage%
+    \begin{tikzpicture}[remember picture, overlay]%
+    \node at (48mm, -83.2mm) {\includegraphics{sunrays-title.pdf}};%
+    \end{tikzpicture}%
+\begin{center}
+    \vspace{4mm}
+    {\Huge\color{white}\allsc{#1}}\\ % Book title
+    \vspace{\fill}
+    {\Huge\color{white}\allsc{#2}}\\ % Author
+    \vspace{10mm}
 \end{center}
 \newpage
 }
 
-%% Colophon page
+% Colophon page
 \newcommand{\colophonpage}[1]{
 \vspace*{\fill}
 \begin{center}
 \begin{minipage}{0.69\textwidth}
     \large\fancyit{\booktitle}\\
     #1
-    \vspace{-10pt}\begin{flushright}$\infty$\end{flushright}
+    \vspace{-2em}\begin{flushright}$\infty$\end{flushright}
 \end{minipage}
 \end{center}
 \newpage
@@ -269,22 +302,26 @@
   \let\ps@chapter\origps@chapter\pagestyle{headings}}
 \makeatother
 
-%% Table of contents:
+% Table of contents:
 % - no chapter/section numbers
 \renewcommand{\chapternumberline}[1]{}
 \renewcommand{\thesection}{}
-% - dots for chapters
-\renewcommand{\cftchapterdotsep}{\cftdotsep}
+% - no page numbers for chapters
+\cftpagenumbersoff{chapter}
 % - include subsections
 \setcounter{tocdepth}{2}
-% - indent subsections further
 \makeatletter
-\renewcommand*\l@subsection{\@dottedtocline{1}{6em}{0em}}
-% - don't internally call \chapter{}, use a custom title instead:
+% - indent sections and subsections further
+\renewcommand*\l@section{\@dottedtocline{1}{2em}{0em}}
+\renewcommand*\l@subsection{\@dottedtocline{1}{4em}{0em}}
+% - don't internally call \chapter{}, use a custom title:
 \renewcommand\@tocmaketitle{%
   \paragraph*{contents}
   \tocmark%
   \@afterheading}
+% - chapter titles in allcaps
+%% (\allsc instead of \MakeUppercase doesn't work)
+\patchcmd{\l@chapter}{#1}{\MakeUppercase{#1}}{}{}
 \makeatother
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -310,8 +347,7 @@
 
 %%%%%%% Hyphenation %%%%%%%
 % Minimum extra line length before the compiler starts complaining
-\hfuzz=2.3pt
-
+\hfuzz=2.2pt
 % Ways to fix line breaks:
 % - \\
 % - \allowbreak{}
@@ -322,8 +358,6 @@
 % Use these when custom hyphenation doesn't do the trick.
 % They stretch the whitespace in otherwise too short lines
 % (include up to the word before the one that's overlong).
-% - \spreadlinePAR is for the indented first line in a paragraph
-% - \spreadlineMID is for unindented lines
 \newcommand{\spreadlineparnobr}[1]{%
 \makebox[\dimexpr\linewidth-\parindent][s]{#1}%
 }
@@ -336,6 +370,28 @@
 \newcommand{\spreadlinemid}[1]{%
 \spreadlinemidnobr{#1}\\%
 }
+
+\hyphenation{blue-print}
+% Where this isn't enough, use /- to indicate possible splits.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%% Other %%%%%%%
+\renewcommand{\footnoterule}{\centering\rule{4cm}{0.4pt}\vspace*{0.6ex}}
+%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%% Custom %%%%%%%
+\newcommand{\vbnormalthin}{\adjustbox{trim = 0pt 0.2pt 3.4pt 0pt, clip}{V}\hspace{-2.5pt}\textit{B}}
+\newcommand{\shorto}{\hspace{-1.5pt}o\hspace{-1pt}}
+\newcommand{\shortoweak}{\hspace{-1pt}o\hspace{-1pt}}
+\newcommand{\shortoupper}{\hspace{-1.5pt}O\hspace{-1pt}}
+\newcommand{\shortr}{r\hspace{-1pt}}
+
+\newcommand{\chapterone}{\chapter[One]{\shortoupper{}ne}}
+\newcommand{\chaptertwo}{\chapter[Two]{Tw\shorto}}
+\newcommand{\chapterthree}{\chapter[Three]{Th\shortr{}ee}}
+\newcommand{\chapterfour}{\chapter[Four]{F\shortoweak{}ur}}
+\newcommand{\chapterthirteen}{\chapter[Thirteen]{Thi\shortr{}teen}}
+\newcommand{\chapterfourteen}{\chapter{F\shortoweak{}u\shortr{}teen}}
+%%%%%%%%%%%%%%%%%%%%%%
 
 \endinput
