@@ -39,29 +39,26 @@
     ]{microtype}
 \frenchspacing
 
+% The Google version has proper kerning/ligatures for W, O, fi, fj, fl
+% https://fonts.google.com/specimen/EB+Garamond
 \setmainfont{EBGaramond}[
-    Path=./EBGaramond-0.016/otf/,
-    Extension=.otf,
-    UprightFont=*12-Regular,
-    ItalicFont=*12-Italic,
-    SmallCapsFont=*12-AllSC,
+    Path=./EBGaramond-Google/static/,
+    Extension=.ttf,
+    UprightFont=*-Regular,
+    ItalicFont=*-Italic,
     Numbers=OldStyle,
-    RawFeature={
-        +clig, % italic: ligature of final vowel + s
-        +dlig, % T+h
-        },
     Renderer=Basic
 ]
+
+% For specific parts only: swashes and historical ligatures
 \newfontfamily\fancyfont{EBGaramond}[
-    Path=./EBGaramond-0.016/otf/,
-    Extension=.otf,
-    UprightFont=*12-Regular,
-    ItalicFont=*12-Italic,
-    SmallCapsFont=*12-AllSC,
+    Path=./EBGaramond-Google/static/,
+    Extension=.ttf,
+    UprightFont=*-Regular,
+    ItalicFont=*-Italic,
     Numbers=OldStyle,
     RawFeature={
-        +dlig, % T+h
-        +hlig, % s+t, c+t and italic s+p, s+k 
+        +dlig, % s+t, c+t and italic c+k, s+p, s+k 
         +swsh, % swashes
         },
     Renderer=Basic
@@ -69,11 +66,25 @@
 \newcommand{\fancyit}[1]{%
     \textit{\fancyfont{}#1}%
 }
+
+% True smallcaps
+% www.georgduffner.at/ebgaramond
+\newfontfamily\scfont{EBGaramond}[
+    Path=./EBGaramond-0.016/otf/,
+    Extension=.otf,
+    UprightFont=*12-Regular,
+    SmallCapsFont=*12-AllSC,
+    Numbers=OldStyle,
+    Renderer=Basic
+]
+\newcommand{\customsc}[1]{%
+    \textsc{\scfont{}#1}%
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%% Custom design elements %%%%%%%
 \newcommand{\chapterstart}[1]{%
-    \noindent\textsc{#1}%
+    \noindent\customsc{#1}%
 }
 
 \newcommand{\sectionrule}{%
@@ -85,7 +96,7 @@
 
 
 %%%%%%% Chapter/section titles %%%%%%%
-\newcommand{\allsc}[1]{\textsc{\MakeLowercase{#1}}}
+\newcommand{\allsc}[1]{\customsc{\MakeLowercase{#1}}}
 \definecolor{mygray}{gray}{0.65}
 
 % Chapter titles:
@@ -377,6 +388,10 @@
 
 %%%%%%% Other %%%%%%%
 \renewcommand{\footnoterule}{\centering\rule{4cm}{0.4pt}\vspace*{0.6ex}}
+
+% LuaLaTex + the EB Garamond distribution don't render ``{}` / '{}'' as intended
+\newcommand{\tripleopen}{\makebox{``\hspace{1pt}`}}
+\newcommand{\tripleclosing}{\makebox{'\hspace{1pt}''}}
 %%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%% Custom %%%%%%%
