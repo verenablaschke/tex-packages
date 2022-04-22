@@ -1,0 +1,137 @@
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{resume}
+
+% Portrait
+\RequirePackage{graphicx}
+
+% Basic page set-up
+\newlength{\margintop}
+\setlength{\margintop}{2.6cm}
+\newlength{\marginside}
+\setlength{\marginside}{2.6cm}
+\RequirePackage[a4paper,
+            left=\marginside,
+            right=\marginside,
+            top=\margintop,
+            bottom=2cm,
+            ]{geometry}
+\RequirePackage[protrusion=true,final]{microtype}
+\frenchspacing
+\setlength\parindent{0pt}
+\setlength{\parskip}{0pt}
+\setlength\intextsep{0pt}
+\raggedbottom
+\raggedright
+\pagestyle{empty}
+
+% Fonts! (-> XeLaTex)
+% via https://fonts.google.com/specimen/Open+Sans
+\RequirePackage{fontspec}
+\setmainfont{OpenSans}[
+    Path=./fonts/,
+    Extension=.ttf,
+    UprightFont=*-Regular,
+    ItalicFont=*-Italic,
+    BoldFont=*-Bold,
+]
+\newfontfamily{\semibold}{OpenSans}[
+    Path=./fonts/,
+    Extension=.ttf,
+    UprightFont=*-SemiBold,
+]
+\renewcommand{\Large}{\fontsize{19pt}{30pt}\selectfont}
+\renewcommand{\large}{\fontsize{15pt}{18pt}\selectfont}
+\renewcommand{\normalsize}{\fontsize{11pt}{14pt}\selectfont}
+\renewcommand{\small}{\fontsize{10pt}{14pt}\selectfont}
+\renewcommand{\footnotesize}{\fontsize{9pt}{12pt}\selectfont}
+
+% Portrait
+\RequirePackage{tikz}
+\newlength{\picheight}
+\newlength{\picwidth}
+\newcommand{\portrait}[1]{%
+\begin{tikzpicture}[remember picture,overlay]  
+  \node [xshift=-\marginside-0.5\picwidth,
+         yshift=-\margintop-0.5\picheight] at (current page.north east)
+    {\includegraphics[width=\picwidth,height=\picheight]{#1}};
+\end{tikzpicture}%
+}
+
+% Contrast colour (xcolor is already imported via tikz)
+\definecolor{col}{RGB}{61, 139, 198}
+
+% Links
+\RequirePackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=col,
+    urlcolor=col,
+    }
+\urlstyle{rm}
+
+% Formatting for the different kinds of data
+\RequirePackage{titlesec}
+\RequirePackage{needspace} % Avoid page breaks between section titles and their sections
+\newcommand\mysection{\vspace{-8pt}\section}
+\titleformat{\section}{\needspace{5\baselineskip}\large\color{col}}{}{0pt}{}
+\titlespacing\section{0pt}{12pt plus 0pt minus 0pt}{-14pt plus 0pt minus 0pt}
+\newcommand{\printname}[1]{{\Large\color{col}#1}\\\vspace{6pt}}
+\newcommand{\entrytitle}[1]{{\normalsize\bfseries#1}}
+\newcommand{\dateloc}[1]{{\small\itshape#1}}
+\newcommand{\company}[1]{{\small#1}}
+\newcommand{\descr}[1]{{\small#1}}
+\newcommand{\skills}[1]{{\small\itshape\color{col}#1}}
+\newcommand{\contact}[1]{{\footnotesize#1}}
+\newcommand{\name}[1]{{\semibold#1}}
+\newcommand{\article}[1]{{\normalsize#1}}
+
+% Separator symbol for skills
+\newcommand{\sep}{•}
+
+% Lists
+\RequirePackage{enumitem}
+\newlength{\listindent}
+\setlength{\listindent}{10mm}
+\setlist{nosep}
+\setlist[itemize]{leftmargin=\listindent,after=\vspace{-\baselineskip}}
+% Combination of \skills{} and a pseudo list in the same line
+\RequirePackage{calc}
+\newcommand{\inlineskills}[2]{\skills{#1}\hspace{\listindent - \widthof{\skills{#1}}}\descr{#2}}
+
+% Tables
+\RequirePackage{multirow}
+\RequirePackage{array} % for ragged-right text in tables
+\RequirePackage{xltabular} % tables that can do page breaks and are flush with the body text
+\renewcommand{\arraystretch}{1.5}
+\newlength{\colleni} % width of first column
+\setlength{\colleni}{3cm}
+\newlength{\collenii} % width of second column (in tables with 3+ columns)
+\setlength{\collenii}{5cm}
+% Every section contains a table to make sure we've got balanced vertical whitespace throughout the document
+% - table with one column
+\newenvironment{tablei}{\xltabular{\textwidth}{@{}>{\raggedright\arraybackslash}X@{}}}
+{\endxltabular}
+% - table with two columns
+\newenvironment{tableii}
+{\xltabular{\textwidth}{@{}>{\raggedright}p{\colleni}>{\raggedright\arraybackslash}X@{}}}
+{\endxltabular}
+% - table with three columns
+\newenvironment{tableiii}
+{\xltabular{\textwidth}{@{}>{\raggedright}p{\colleni}>{\raggedright}p{\collenii}>{\raggedright\arraybackslash}X@{}}}
+{\endxltabular}
+
+% Cell in the first column with date and place
+\newcommand{\dateloccell}[3]{\dateloc{#1--#2\newline#3}}
+\newcommand{\since}{since}
+\newcommand{\dateloccellsince}[2]{\dateloc{\since{} #1\newline#2}}
+
+% Cell in the second column with job/degree title, employer/university, details, and (optionally) corresponding hard skills 
+\newcommand{\details}[3]{& \entrytitle{#1} \company{#2} \newline \descr{#3}\\}
+\newcommand{\detailsskillstop}[4]{& \entrytitle{#1} \company{#2} \newline \skills{#3} \newline \descr{#4}\\}
+\newcommand{\detailsskillsbottom}[4]{& \entrytitle{#1} \company{#2} \newline \descr{#4} \newline \skills{#3}\\}
+\newcommand{\detailsskillsinline}[4]{& \entrytitle{#1} \company{#2}\newline\inlineskills{#3}{#4}\\}
+
+% Cell in a one-column table
+\newcommand{\aca}[2]{\article{#1}\newline\hspace{\listindent}\hangindent=\listindent \descr{#2}\\}
+
+\endinput
