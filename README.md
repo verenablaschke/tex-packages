@@ -33,31 +33,16 @@ there are left in your text:
 </tr>
 
 <tr>
-  <td colspan="2"><a href="https://github.com/verenablaschke/tex-packages/tree/main/lettrinebox">lettrinebox</a>
+  <td colspan="2"><a href="https://github.com/verenablaschke/tex-packages/tree/main/resume">resume</a>
 </td>
 <tr>
 <td>
 <pre>
-<img src="https://github.com/verenablaschke/tex-packages/blob/main/lettrinebox/lettrinebox-demo-slim.png"/>
+<img src="https://github.com/verenablaschke/tex-packages/blob/main/resume/resume-preview.png"/>
 </pre>
 </td>
 <td>
-<pre>
-\documentclass{article}
-\usepackage{lettrinebox}
-\begin{document}
-\lettrinebox{8cm}{lettrinebox dot sty}{Generates
-a box typeset in \textit{EB~Garamond}, with several
-of the historical font variants activated.
-It mostly acts as a wrapper around the
-\textit{coloredlettrine} package, which creates a
-decorated dropped initial in two colours of your choosing.
-At the moment, it only includes decorated initials
-for \textit{A}, \textit{G} and \textit{T}, so prepare
-yourself for Oulipian constraints in your writing.
-Enjoy!}
-\end{document}
-</pre>
+    <i>A style file for typesetting résumés.</i>
 </td>
 </tr>
 
