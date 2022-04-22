@@ -3,45 +3,15 @@
 \RequirePackage[explicit]{titlesec}
 \RequirePackage[english]{babel}
 \RequirePackage[T1]{fontenc}
+\RequirePackage{silence}
 \RequirePackage{etoolbox}
-\RequirePackage{graphicx}
-\RequirePackage{adjustbox}
-\RequirePackage{xcolor}
-\RequirePackage{enumitem}
-\RequirePackage[framemethod=tikz]{mdframed}
-\RequirePackage{changepage}
-
-%% DEV mode:
-% \RequirePackage[showframe]{geometry}
 
 
-%%%%%%% General layout %%%%%%%
-\setstocksize{210mm}{148.5mm} % A5
-% \setstocksize{210mm}{140mm}
-\settrimmedsize{210mm}{140mm}{*}
-% 0 at the top, 8.5 at the foreedge
-\settrims{0mm}{8.5mm}
-\setlrmarginsandblock{15.6mm}{31.2mm}{*}
-\setulmarginsandblock{15.6mm}{35.7mm}{*}
-\setheaderspaces{*}{-5mm}{*}
-% gutter (text--note); width; push (vspace between marginpar)
-\setmarginnotes{5mm}{21mm}{5mm}
-\checkandfixthelayout
-
-% variable column height instead of vertical glue
-\raggedbottom
-% Manually take care of widows and orphans
-\clubpenalty=0
-\widowpenalty=0
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%%%%%%% Font settings %%%%%%%
+%%%% FONTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \RequirePackage{fontspec}
-% https://www.fontshop.com/families/engravers-oldstyle-205
 \setmainfont{EngraverOldsty205BT}[
     Path=./fonts/,
-    Extension=.otf,
+    Extension=-220404.otf,
     UprightFont=*-mod-Roman,
     ItalicFont=*-mod-Italic,
     RawFeature={
@@ -49,7 +19,6 @@
         +liga,
         },
 ]
-% https://fonts.google.com/specimen/Alegreya+Sans
 \setsansfont{AlegreyaSans}[
     Path=./fonts/,
     Extension=.ttf,
@@ -64,7 +33,6 @@
     ItalicFeatures = {SmallCapsFont =
                     {*SC-Italic}}
 ]
-% https://fonts.google.com/specimen/Alegreya+Sans+SC
 \newfontfamily\AlegreyaSansSCLight{AlegreyaSansSC-Light}[
     Path=./fonts/,
     Extension=.ttf,
@@ -77,39 +45,59 @@
 \renewcommand{\normalsize}{\fontsize{11pt}{14pt}\selectfont}
 \renewcommand{\small}{\fontsize{10pt}{15pt}\selectfont}
 \renewcommand{\footnotesize}{\fontsize{8pt}{12pt}\selectfont}
+% to get roman sans-serif letters inside an italic area
+\newcommand{\romansf}[1]{{\normalfont\textsf{#1}}}
+\newcommand{\textpt}[1]{\textsc{\MakeLowercase{#1}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%% BASIC LAYOUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% To check what the final result will look like, use these options instead:
+% \setstocksize{210mm}{140mm}
+% \settrimmedsize{210mm}{140mm}{*}
+% \settrims{0mm}{0mm}
+\setstocksize{210mm}{148.5mm} % A5
+\settrimmedsize{210mm}{140mm}{*}
+\settrims{0mm}{8.5mm} % Trim the foreedge after printing (remove 8.5 mm)
+\setlrmarginsandblock{15.6mm}{31.2mm}{*}
+\setulmarginsandblock{15.6mm}{35.7mm}{*}
+\setheaderspaces{*}{-5mm}{*}
+\setmarginnotes{5mm}{21mm}{5mm} % separation (text--note); width; push (vspace between marginpar)
+\checkandfixthelayout
+
+\setlength{\parindent}{8mm}
+\newlength{\parindentsave}
+\setlength{\parindentsave}{\parindent}
+\clubpenalty=0
+\widowpenalty=0
+\raggedbottom % variable column height instead of vertical glue
 
 % hanging punctuation
 \RequirePackage[protrusion=true,final,babel=true]{microtype}
 \WarningFilter{microtype}{Unknown slot number}
 
 \frenchspacing
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\booktitle}{Book Title}
+\renewcommand{\author}{Author}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%% Foot/margin notes %%%%%%%
+%%%% FOOTNOTES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \RequirePackage{dblfnote} % 2-col footnotes
-\RequirePackage{ragged2e}
-
 \setlength{\footnotesep}{8pt}
-
-\setlength{\parindent}{8mm}
-\newlength{\parindentsave}
-\setlength{\parindentsave}{\parindent}
-
-% no line between text and footnote
-\renewcommand\footnoterule{}
-
-% footnote font: sans-serif, adjusted size/leading/indent
-\setlength{\footparindent}{6mm}
+\renewcommand\footnoterule{} % no line between text and footnote
 \renewcommand{\foottextfont}{\sffamily\footnotesize}
+\setlength{\footparindent}{6mm}
+% don't indent the first line of the footnote; put the footnote mark in the margin
+\setlength{\footmarkwidth}{-1pt}
+\setlength{\footmarksep}{1pt}
 
 % footnote mark (degree symbol)
-\usepackage{gensymb}
+\RequirePackage{gensymb}
 \newcommand{\setfnsymbol}[1]{%
     \renewcommand*{\@makefnmark}{#1}
     \footmarkstyle{#1}
 }
-\RequirePackage{silence}
 \WarningsOff[gensymb]
 \setfnsymbol{\degree}
 
@@ -129,16 +117,52 @@
     \setfnsymbol{\degree}
 }
 
-% footnote starts off un-indented; symbol in margin
-\setlength{\footmarkwidth}{-1pt}
-\setlength{\footmarksep}{1pt}
+% This is a very inelegant last-resort option to dblfnote's problems with long comments
+\RequirePackage{multicol}
+\raggedcolumns
+\newcommand{\commentpagenopgbr}[1]{%
+    \commentsection{#1}
+    \clearpage%
+}
+\newcommand{\commentsection}[1]{%
+    \sffamily\footnotesize%
+    \setlength{\parindent}{\footparindent}%
+    \begin{multicols}{2}%
+    #1
+    \end{multicols}%
+    \normalfont\normalsize%
+    \setlength{\parindent}{\parindentsave}%
+}
+\newcommand{\commentpage}[1]{%
+    \clearpage    
+    \commentpagenopgbr{#1}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% margins: ragged, footnote font
+
+%%%% PAGE NUMBERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page numbers in the margins at text height
+\nouppercaseheads
+\makepagestyle{mystyle} 
+\makeevenhead{mystyle}{\llap{\textsf{\thepage}\hspace{4\marginparsep}}}{}{}
+\makeoddhead{mystyle}{}{}{\rlap{\hspace{4\marginparsep}\textsf{\thepage}}}
+\makeatletter
+\makepsmarks{mystyle}{%
+  \createmark{chapter}{left}{nonumber}{}{}
+}
+\makeatother
+\pagestyle{mystyle}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%% MARGIN NOTES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% margins: ragged-right, footnote font
+\RequirePackage{ragged2e} % hyphenated ragged text
+\RequirePackage{graphicx}
 \sideparmargin{outer}
 \newcommand\marginalia[1]{\sidepar{\sffamily\footnotesize#1}}
 \newcommand\marginaliahyph[1]{\marginalia{\RaggedRight#1}}
-
-% maniculels for the margin notes
+\newcommand\marginaliahyphleft[1]{\marginalia{\RaggedLeft#1}}
 \newcommand{\maniculel}[1][-12pt]{%
     \hspace*{#1}%
     \raisebox{-6pt}{%
@@ -150,31 +174,11 @@
     \raisebox{-6pt}{%
         \reflectbox{\includegraphics[height=12pt]{manicule.png}}}}
 \newcommand{\linewithmaniculer}[2][3mm]{\makebox{\hspace*{#1}#2 \maniculer{}}}
-
-% macros for setting the contents of the footnotes/margin notes
-\newcommand{\commenter}[1]{\textpt{#1}: }
-\newcommand{\remark}[2]{\commenter{#1}\textit{#2}}
-
-% This is a very inelegant last-resort option to dblfnote's problems with long comments
-\RequirePackage{multicol}
-\newcommand{\commentpagenopgbr}[1]{%
-    \sffamily\footnotesize%
-    \setlength{\parindent}{\footparindent}%
-    \begin{multicols}{2}%
-    #1
-    \end{multicols}%
-    \normalfont\normalsize%
-    \setlength{\parindent}{\parindentsave}%
-    \clearpage%
-}
-\newcommand{\commentpage}[1]{%
-    \clearpage    
-    \commentpagenopgbr{#1}
-}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%% Section delimiters %%%%%%%
+%%%% DIVIDERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage[framemethod=tikz]{mdframed}
 \newsavebox{\myrule}
 \sbox{\myrule}{\tikz 
     {\path [draw, line width=0.2mm] (-0.06,0) to (0,0.06) to (0.06,0) to (0,-0.06) to cycle;
@@ -182,16 +186,7 @@
     \path [draw, line width=0.2mm] (0.06,0) to (0.8,0);}
 }
 
-\newcommand{\sectionrulefn}{%
-\begin{center}
-\vspace*{-1.97mm}
-     \usebox{\myrule}
-\vspace{-1.97mm}
-\end{center}
-}
-
-\newcommand{\sectionrulefnshort}{\vspace{-\baselineskip}\sectionrulefn}
-
+% section rules in the main text
 \newcommand{\sectionrule}{%
 \begin{center}
 \vspace*{0.8mm}
@@ -199,13 +194,39 @@
 \vspace{0.8mm}
 \end{center}
 }
-
+% the short versions are for cases where the previous line is very short
+% (so it optically looks the same as a normal sectionrule after a longer line)
 \newcommand{\sectionruleshort}{\vspace{-\baselineskip}\sectionrule}
 \newcommand{\sectionruleshortbelow}{\sectionrule\vspace{-\baselineskip}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% section rules in footnotes
+\newcommand{\sectionrulefn}{%
+\begin{center}
+\vspace*{-1.97mm}
+     \usebox{\myrule}
+\vspace{-1.97mm}
+\end{center}
+}
+\newcommand{\sectionrulefnshort}{\vspace{-\baselineskip}\sectionrulefn}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%% Chapter/section titles %%%%%%%
+%%%% COMMENTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\commenter}[1]{\textpt{#1}: }
+\newcommand{\remark}[2]{\commenter{#1}\textit{#2}}
+
+% comment index
+\RequirePackage{imakeidx} % allows creating multiple indices
+\makeindex[name=commenter,title={Commenters}]
+\makeindex[name=comments,title={Comment Topics}]
+\newcommand{\idx}[2]{\index[commenter]{#1}\index[comments]{#2}}
+\newcommand\gobbleone[1]{}
+\newcommand*{\seeonly}[2]{\ \emph{\seename} #1}
+\newcommand*{\also}[2]{\ \emph{\alsoname} #1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%% CHAPTER/SECTION TITLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Chapter titles
 \makeatletter
 \makechapterstyle{customchapter}{
@@ -221,11 +242,8 @@
 \makeatother
 \chapterstyle{customchapter}
 
-% Section titles
-\titleformat{\section}{}{}{0pt}{\large\itshape#1}
-
-\usepackage{tikz}
-\usepackage{xcolor}
+\RequirePackage{tikz}
+\RequirePackage{xcolor}
 \newcommand{\newday}[1]{%
     \begin{tikzpicture}[remember picture,overlay]%
        \draw[fill=black] (8.6,3.56)  -- (9.8,4.06) -- (12.9,4.06) -- (12.9,3.06) -- (9.8,3.06) -- cycle;
@@ -239,43 +257,31 @@
 \thispagestyle{empty}
 }
 
-\newcommand{\letterstyletitle}[1]{{\vspace{2em}\hfill\textsf{\textpt{\large #1}}}\\}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%%%%%%% Headers/footers %%%%%%%
-\nouppercaseheads
-\makepagestyle{mystyle} 
-\makeevenhead{mystyle}{\llap{\textsf{\thepage}\hspace{4\marginparsep}}}{}{}
-\makeoddhead{mystyle}{}{}{\rlap{\hspace{4\marginparsep}\textsf{\thepage}}}
-\makeatletter
-\makepsmarks{mystyle}{%
-  \createmark{chapter}{left}{nonumber}{}{}
-}
-\makeatother
-\pagestyle{mystyle}
-
-
 % No page numbers on chapter opening pages
 \makeoddfoot{plain}{}{}{}
 \chapterstyle{plain}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\letterstyletitle}[1]{{\vspace{14pt}\hfill\textsf{\textpt{\large #1}}}\\}
+
+\titleformat{\section}{}{}{0pt}{\textsf{\textpt{\large #1}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%% Front/main/end matter %%%%%%%
+%%%% FRONT MATTER, MAIN MATTER, APPENDIX %%%%%%%%%%%%%%%%%
 % No page numbers in the front matter
 % https://tex.stackexchange.com/a/53491 (CC BY-SA 3.0)
 \makeatletter
 \aliaspagestyle{title}{empty}
 \let\origps@chapter\ps@chapter
-\preto\frontmatter{\let\ps@chapter\ps@empty\pagestyle{empty}}
+\preto\frontmatter{\let\ps@chapter\ps@empty\pagestyle{empty}\sffamily}
 \preto\mainmatter{%
   \cleardoublepage
-  \let\ps@chapter\origps@chapter\pagestyle{headings}}
+  \let\ps@chapter\origps@chapter\pagestyle{headings}\rmfamily}
 \makeatother
 
 \newcommand{\startmainmatter}[1][7]{
 \mainmatter
+\rmfamily
 \pagestyle{mystyle}
 \setcounter{page}{#1}
 }
@@ -285,78 +291,99 @@
 \chapter{Appendix}
 \setcounter{page}{1}
 \pagenumbering{roman}
+\sffamily
+\footnotesize
 }
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%% Line length issues %%%%%%%
+%%%% LINE LENGTH FIXES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Prefer increasing the inter-word spacing over creating overlong lines
+\setlength{\emergencystretch}{.5em}
+
+% Only use this if absolutely necessary!
+\newcommand{\squeeze}[2]{{\addfontfeature{LetterSpace=#2}#1}}
+
 % Minimum extra line length before the compiler starts complaining
 \hfuzz=2.7pt
+% Ways to fix line breaks:
+% - \\
+% - \allowbreak{}
+% - \- (inserts hyphen if LaTeX breaks the line)
+% - \mbox{ ... } (no break!)
+% - ~ (non-breaking space)
 
 % Use these when custom hyphenation doesn't do the trick.
 % They stretch the whitespace in otherwise too short lines
 % (include up to the word before the one that's overlong).
+\newcommand{\spreadline}[4]{%
+\makebox[\dimexpr#2-#3+#4][s]{#1}%
+}
 \newcommand{\spreadlineparnobr}[1]{%
-\makebox[\dimexpr\linewidth-\parindent][s]{#1}%
+\spreadline{#1}{\linewidth}{\parindent}{0pt}%
 }
 \newcommand{\spreadlinepar}[1]{%
 \spreadlineparnobr{#1}\\%
 }
+\newcommand{\spreadlineparnobrhyph}[1]{%
+\spreadline{#1}{\linewidth}{\parindent}{1pt}%
+}
+\newcommand{\spreadlineparhyph}[1]{%
+\spreadlineparnobrhyph{#1}\\%
+}
 \newcommand{\spreadlinemidnobr}[1]{%
-\makebox[\dimexpr\linewidth][s]{#1}%
+\spreadline{#1}{\linewidth}{0pt}{0pt}%
 }
 \newcommand{\spreadlinemid}[1]{%
 \spreadlinemidnobr{#1}\\%
 }
+\newcommand{\spreadlinemidnobrhyph}[1]{%
+\spreadline{#1}{\linewidth}{0pt}{1pt}%
+}
+\newcommand{\spreadlinemidhyph}[1]{%
+\spreadlinemidnobrhyph{#1}\\%
+}
 \newcommand{\spreadlineparcolnobr}[1]{%
-\makebox[\dimexpr\columnwidth-\footparindent][s]{#1}%
+\spreadline{#1}{\columnwidth}{\footparindent}{0pt}%
 }
 \newcommand{\spreadlineparcol}[1]{%
 \spreadlineparcolnobr{#1}\\%
 }
+\newcommand{\spreadlineparcolnobrhyph}[1]{%
+\spreadline{#1}{\columnwidth}{\footparindent}{1pt}%
+}
+\newcommand{\spreadlineparcolhyph}[1]{%
+\spreadlineparcolnobrhyph{#1}\\%
+}
 \newcommand{\spreadlinemidcolnobr}[1]{%
-\makebox[\dimexpr\columnwidth][s]{#1}%
+\spreadline{#1}{\columnwidth}{0pt}{0pt}%
 }
 \newcommand{\spreadlinemidcol}[1]{%
 \spreadlinemidcolnobr{#1}\\%
 }
+\newcommand{\spreadlinemidcolnobrhyph}[1]{%
+\spreadline{#1}{\columnwidth}{0pt}{1pt}%
+}
+\newcommand{\spreadlinemidcolhyph}[1]{%
+\spreadlinemidcolnobrhyph{#1}\\%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Last(!!!) resort: adjusting the letterspacing ever so slightly
-\newcommand{\squeeze}[2]{{\addfontfeature{LetterSpace=#2}#1}}
 
-% Prefer increasing the inter-word spacing over creating overlong lines
-\setlength{\emergencystretch}{.5em}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%%%%%%% Drop caps %%%%%%%
+%%%% DROP CAPS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \RequirePackage{lettrine}
-
 \renewcommand{\LettrineFontHook}{\AlegreyaSansSCLight}
 \renewcommand{\LettrineTextFont}{\sffamily\scshape}
 \newcommand{\firstline}[1]{\noindent\textsf{\textpt{#1}}}
-
 \setcounter{DefaultLines}{3}
-% no indent between drop cap and the rest of the first word
+% % - no indent between drop cap and the rest of the first word
 \setlength{\DefaultFindent}{0pt}
-% space between drop cap and the second line
+% % - space between drop cap and the second line
 \setlength{\DefaultNindent}{5pt}
-% push to left for better optical alignment
+% % - push to left for better optical alignment
 \renewcommand{\DefaultLhang}{0.1}
-
+% letter-specific options in this config file:
 \renewcommand{\DefaultOptionsFile}{lettrineoptions.cfg}
-%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%%%%%%% Custom %%%%%%%
-% Keyword index
-\RequirePackage{imakeidx}
-\makeindex
-
-% to get roman sans-serif letters inside an italic area
-\newcommand{\romansf}[1]{{\normalfont\textsf{#1}}}
-
-\newcommand{\textpt}[1]{\textsc{\MakeLowercase{#1}}}
-%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \endinput

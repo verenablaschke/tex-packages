@@ -1,0 +1,109 @@
+\documentclass[11pt,showtrims]{memoir} % remove the showrtims option before creating the print file
+\usepackage{booktemplate-annotated}
+\usepackage{blindtext,lipsum}
+
+\renewcommand{\booktitle}{The Book Title}
+\renewcommand{\author}{A. N. Author}
+
+\begin{document}
+
+\frontmatter
+\vspace*{\fill}
+\begin{center}
+{\large \textpt{\author}}
+
+\phantom{}\\
+{\Huge{\textpt{\AlegreyaSansSCLight \booktitle}}}\raisebox{6pt}{\degree}
+\makeatletter
+\renewcommand*{\@makefnmark}{}
+\makeatother
+\footnote{\idx{Author}{book title}\blindtext
+
+\sectionrulefn
+
+\noindent\remark{First Commenter}{\idx{First Commenter}{reader engagement}\blindtext}
+
+\idx{Author}{reader engagement}\blindtext
+}
+\end{center}
+
+
+\startmainmatter
+\chapter{One}
+
+\newday{Day 1}
+
+\lettrine{L}{orem} \firstline{dolor sit amet, consectetur adipiscing elit, sed} do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+\marginalia{\remark{Qwertyui}{\lipsum[1][3]}\\\maniculel\textit{\lipsum[1][4-6]}\idx{Qwertyui}{lorem ipsum}} 
+\lipsum[1][3-4]%
+\footnote{%
+\idx{Author}{introduction}\lipsum[1] Test.
+
+\sectionrulefnshort
+
+\noindent\blindtext
+}
+
+\blindtext
+
+\lipsum[5][1-3]
+\marginalia{
+\linewithmaniculer{Hello} world. \lipsum[2][1-2]
+\idx{Author}{lorem ipsum}
+}
+
+
+\blindtext
+\marginalia{General margin comment.}
+
+\blindtext[2]%
+\footnote{%
+\lipsum[1]\idx{Author}{lorem ipsum}
+
+\remark{Second Commenter}{\lipsum[4]}\idx{Second Commenter}{lorem ipsum}
+
+\remark{Third Commenter}{\lipsum[6][1-2]}\idx{Third Commenter}{lorem ipsum}
+}
+
+\blindtext
+
+\Blindtext
+
+\commentpage{%
+\noindent\lipsum[3]\idx{Author}{some topic}
+
+\sectionrulefn
+
+\noindent\remark{Other Commenter}{\lipsum[2][1-4]}\idx{Other Commenter}{other topic}
+
+\lipsum[3]\idx{Author}{other topic}
+
+\lipsum[4]
+
+\blindtext[3]
+}
+
+\startappendix
+\index[comments]{titles \seeonly{book title}|gobbleone}
+\index[comments]{readers!zzzzz@\also{reader engagement}|gobbleone}
+
+\sffamily
+\footnotesize
+\printindex[commenter]
+\printindex[comments]
+
+\clearpage
+\section{Colophon}
+\textit{\booktitle} was first published ..............
+
+This book was designed and typeset by \textsc{the typesetter} in February and March 2022.
+The text is set in the following typefaces:
+
+---\textit{Engravers' Oldstyle 205} set in 11~pt with 14~pt leading.
+This typeface is based on the \textit{Cochin} face designed by Georges Peignot in 1912, based on the early 18th century engravings by Charles-Nicolas Cochin le Jeune, and was adapted by Sol Hess and Matthew Carter.
+
+---\textit{Alegreya Sans} and \textit{Alegreya Sans SC}: these fonts were designed by Juan Pablo del Peral as part of a super family with humanist design. Comments are set 8/12. For larger titles and drop caps, \textit{Light} variants of the fonts were used.
+
+This book was bound by \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ in \_\_\_\_\_\_\_\_\_.
+
+\end{document}

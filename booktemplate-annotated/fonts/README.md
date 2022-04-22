@@ -1,0 +1,1 @@
+Put the font files for Engravers' Oldstyle 205 (roman and italic) and [Alegreya Sans](AlegreyaSans) (regular, regular italic) and [Alegreya Sans SC](https://fonts.google.com/specimen/Alegreya+Sans+SC) (regular, regular italic, light) in this directory (or change the font imports in the .sty file).
