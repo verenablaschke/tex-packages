@@ -7,3 +7,5 @@ Creates a book with A5 pages that are meant to be trimmed to 14 cm x 21 cm (remo
 Intended for books with lots of commentary (in the form of margin notes, footnotes and entire pages of commentary).
 
 ![Screenshot of part of the demo book](https://github.com/verenablaschke/tex-packages/blob/main/booktemplate-annotated/demo-preview.png)
+
+![Screenshot of part of the demo book](https://github.com/verenablaschke/tex-packages/blob/main/booktemplate-annotated/book-preview.png)
