@@ -1,4 +1,4 @@
-A (growing) collection of LaTeX packages.
+A (growing) collection of LaTeX packages. Maybe other TeX flavours as well at some point.
 
 <table>
 <tr>

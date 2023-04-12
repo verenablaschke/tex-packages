@@ -1,0 +1,92 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{vbarticle}[2023-04-11 academic style file]
+
+\RequirePackage{titlesec}
+% \LoadClass{article}
+
+\newcommand{\marginlabel}[1]{\llap{#1\hspace{1em}}}
+
+\titleformat{\section}
+  [hang]
+  {\sffamily\Large}
+  {\marginlabel{\thesection}}
+  {0pt} % hspace between label and title
+  {} % title prefix
+  [] % title suffix (vertical mode!)
+\titleformat{\subsection}
+  [hang]
+  {\sffamily\large}
+  {\marginlabel{\thesubsection}}
+  {0pt}
+  {}
+  []
+\titleformat{\subsubsection}
+  [hang]
+  {\sffamily}
+  {\marginlabel{\thesubsubsection}}
+  {0pt}
+  {}
+  []
+\titleformat{\paragraph}%
+  [runin]
+  {\sffamily\itshape}
+  {\theparagraph}
+  {1em}
+  {}
+  []
+
+% \makeatletter
+% % \renewcommand\paragraph{
+% %     \@startsection {paragraph}               % name
+% %     {4}                                      % level
+% %     {\z@}                                    % indent 
+% %     {-3.25ex\@plus -1ex \@minus -.2ex}       % before skip
+% %     {1.5ex \@plus .2ex}                      % afterskip
+% %     {\normalfont\normalsize\bfseries}        % style
+% %   }
+
+% \renewcommand\section{
+%     \@startsection {section}
+%     {1}
+%     {\z@}
+%     {-3.5ex \@plus -1ex \@minus -.2ex}
+%     {2.3ex \@plus.2ex}
+%     {\normalfont\Large\bfseries}}
+    
+% \renewcommand\thesection{\noindent\llap{\@arabic\c@section}}
+% \makeatother
+
+% % \def\@seccntformat#1{\makebox[0pt][r]{\csname the#1\endcsname\hspace{6pt}}}
+
+\RequirePackage{caption}
+\captionsetup{labelsep=period, font={small, sf}}
+
+\RequirePackage{libertine}
+\RequirePackage{inconsolata}
+\RequirePackage{natbib}
+\RequirePackage{xcolor}
+\RequirePackage{microtype}
+\RequirePackage[
+% backref=page, % or section
+pagebackref,
+            colorlinks,
+            allcolors=teal
+            ]{hyperref}
+% \RequirePackage{backref}
+
+% Based on https://tex.stackexchange.com/a/400052/158727 (CC BY-SA 3.0), see also https://github.com/latex3/hyperref/blob/d90a5d874d2ec1536aca07a3be938faef1f23cb8/backref.dtx#L206
+\renewcommand*{\backrefsep}{,~}%
+\renewcommand*{\backreftwosep}{,~}% ', and~'
+\renewcommand*{\backreflastsep}{,~}% ' and~'
+\renewcommand*{\backrefalt}[4]{%
+\ifcase #1 % arg1 of backrefalt is the number of (non-duplicate) citation pages/section
+\(\rightarrow\)~\textit{No citations.}%
+\or
+\(\rightarrow\)~\textit{Cited on p.~#2}.%
+\else
+\(\rightarrow\)~\textit{Cited on pp.~#2.}%
+\fi
+}
+
+
+\raggedbottom

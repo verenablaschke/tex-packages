@@ -1,3 +1,13 @@
+% Modification of acl_natbib.bst by VB, 2023.
+% Changes:
+% - double quotes around title (tit-qq)
+% - hrule instead of repeating author/editor names (nmdash, modified nmd-3)
+% - omit addresses
+% - p(p). instead of page(s)
+% - thin space in large page numbers (pgsep-s)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%% Modification of BibTeX style file acl_natbib_nourl.bst
 %%% ... by urlbst, version 0.7 (marked with "% urlbst")
 %%% See <http://purl.org/nxg/dist/urlbst>
@@ -540,10 +550,12 @@ FUNCTION {bbl.in}
 { "in" }
 
 FUNCTION {bbl.pages}
-{ "pages" }
+% { "pages" }
+{ "pp." } % VB
 
 FUNCTION {bbl.page}
-{ "page" }
+% { "page" }
+{ "p." } % VB
 
 FUNCTION {bbl.chapter}
 { "chapter" }
@@ -672,8 +684,10 @@ FUNCTION {format.names}
     { s nameptr
       duplicate$ #1 >
         { "{ff~}{vv~}{ll}{, jj}" }
+        % { "{f.~}{vv~}{ll}{, jj}" }
+        % { "{vv~}{ll}{,~f.}{, jj}" }
         { "{ff~}{vv~}{ll}{, jj}" }  % first name first for first author 
-%        { "{vv~}{ll}{, ff}{, jj}" }  % last name first for first author
+       % { "{vv~}{ll}{, ff}{, jj}" }  % last name first for first author
       if$
       format.name$
       bibinfo bibinfo.check
@@ -802,13 +816,35 @@ FUNCTION {format.note}
   if$
 }
 
+% FUNCTION {format.title}
+% { title
+%   duplicate$ empty$ 'skip$
+%     { "t" change.case$ }
+%   if$
+%   "title" bibinfo.check
+% }
+% from merlin.mbs for tit-qq
 FUNCTION {format.title}
 { title
   duplicate$ empty$ 'skip$
     { "t" change.case$ }
   if$
   "title" bibinfo.check
+  duplicate$ empty$ 'skip$
+    {
+      "\enquote{" swap$ *
+      add.period$ "}" *
+    }
+  if$
 }
+
+FUNCTION {end.quote.title}
+{ title empty$
+    'skip$
+    { before.all 'output.state := }
+  if$
+}
+
 FUNCTION {format.full.names}
 {'s :=
  "" 't :=
@@ -918,8 +954,44 @@ FUNCTION {output.bibitem.original} % urlbst (renamed from output.bibitem, so it 
   before.all 'output.state :=
 }
 
+% VB: pgsep-s
+FUNCTION {if.digit}
+{ duplicate$ "0" =
+  swap$ duplicate$ "1" =
+  swap$ duplicate$ "2" =
+  swap$ duplicate$ "3" =
+  swap$ duplicate$ "4" =
+  swap$ duplicate$ "5" =
+  swap$ duplicate$ "6" =
+  swap$ duplicate$ "7" =
+  swap$ duplicate$ "8" =
+  swap$ "9" = or or or or or or or or or
+}
+FUNCTION {n.separate}
+{ 't :=
+  ""
+  #0 'numnames :=
+  { t empty$ not }
+  { t #-1 #1 substring$ if.digit
+      { numnames #1 + 'numnames := }
+      { #0 'numnames := }
+    if$
+    t #-1 #1 substring$ swap$ *
+    t #-2 global.max$ substring$ 't :=
+    numnames #5 =
+      { duplicate$ #1 #2 substring$ swap$
+        #3 global.max$ substring$
+        "\," swap$ * *
+      }
+      'skip$
+    if$
+  }
+  while$
+}
+
 FUNCTION {n.dashify}
 {
+  n.separate % pgsep-s
   't :=
   ""
     { t empty$ not }
@@ -956,7 +1028,8 @@ FUNCTION {format.date}
   if$
   extra.label *
   before.all 'output.state :=
-  after.sentence 'output.state :=
+  " (" swap$ * ")" *  % VB: added line -> parenthesis around year
+  % after.sentence 'output.state := % VB: comment out line -> no period before year
 }
 FUNCTION {format.btitle}
 { title "title" bibinfo.check
@@ -1199,24 +1272,26 @@ FUNCTION {format.incoll.inproc.crossref}
   " \cite{" * crossref * "}" *
 }
 FUNCTION {format.org.or.pub}
-{ 't :=
-  ""
-  address empty$ t empty$ and
-    'skip$
-    {
-      t empty$
-        { address "address" bibinfo.check *
-        }
-        { t *
-          address empty$
-            'skip$
-            { ", " * address "address" bibinfo.check * }
-          if$
-        }
-      if$
-    }
-  if$
-}
+% { 't :=
+%   ""
+%   address empty$ t empty$ and
+%     'skip$
+%     {
+%       t empty$
+%         { address "address" bibinfo.check *
+%         }
+%         { t *
+%           address empty$
+%             'skip$
+%             { ", " * address "address" bibinfo.check * }
+%           if$
+%         }
+%       if$
+%     }
+%   if$
+% }
+{} % VB: no addresses
+
 FUNCTION {format.publisher.address}
 { publisher "publisher" bibinfo.warn format.org.or.pub
 }
@@ -1224,6 +1299,24 @@ FUNCTION {format.publisher.address}
 FUNCTION {format.organization.address}
 { organization "organization" bibinfo.check format.org.or.pub
 }
+
+% VB: nmdash, nmd-3
+STRINGS {oldname}
+
+% VB: nmdash, nmd-3
+FUNCTION {name.or.dash}
+{ 's :=
+   oldname empty$
+     { s 'oldname := s }
+     { s oldname =
+         % { "---{}---{}---" }
+         { "---\kern-1pt---\kern-1pt---" } %% VB
+         { s 'oldname := s }
+       if$
+     }
+   if$
+}
+
 
 % urlbst...
 % Functions for making hypertext links.
@@ -1371,11 +1464,15 @@ FUNCTION {webpage}
   author empty$
     { editor empty$
         'skip$  % author and editor both optional
-        { format.editors output.nonnull }
+        { format.editors output.nonnull 
+          name.or.dash % nmdash
+        }
       if$
     }
     { editor empty$
-        { format.authors output.nonnull }
+        { format.authors output.nonnull 
+          name.or.dash % nmdash
+        }
         { "can't use both author and editor fields in " cite$ * warning$ }
       if$
     }
@@ -1404,6 +1501,7 @@ FUNCTION {article}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
+  name.or.dash % nmdash
   format.date "year" output.check
   date.block
   title empty$ 'skip$ 'possibly.setup.inlinelink if$ % urlbst
@@ -1430,8 +1528,10 @@ FUNCTION {book}
   author empty$
     { format.editors "author and editor" output.check
       editor format.key output
+      name.or.dash % nmdash
     }
     { format.authors output.nonnull
+      name.or.dash % nmdash
       crossref missing$
         { "author and editor" editor either.or.check }
         'skip$
@@ -1463,13 +1563,14 @@ FUNCTION {booklet}
 { output.bibitem
   format.authors output
   author format.key output
+  name.or.dash % nmdash
   format.date "year" output.check
   date.block
   title empty$ 'skip$ 'possibly.setup.inlinelink if$ % urlbst
   format.title "title" output.check
   new.block
   howpublished "howpublished" bibinfo.check output
-  address "address" bibinfo.check output
+  % address "address" bibinfo.check output %VB
   new.block
   format.note output
   fin.entry
@@ -1480,8 +1581,10 @@ FUNCTION {inbook}
   author empty$
     { format.editors "author and editor" output.check
       editor format.key output
+      name.or.dash % nmdash
     }
     { format.authors output.nonnull
+      name.or.dash % nmdash
       crossref missing$
         { "author and editor" editor either.or.check }
         'skip$
@@ -1517,6 +1620,7 @@ FUNCTION {incollection}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
+  name.or.dash % nmdash
   format.date "year" output.check
   date.block
   title empty$ 'skip$ 'possibly.setup.inlinelink if$ % urlbst
@@ -1543,6 +1647,7 @@ FUNCTION {inproceedings}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
+  name.or.dash % nmdash
   format.date "year" output.check
   date.block
   title empty$ 'skip$ 'possibly.setup.inlinelink if$ % urlbst
@@ -1553,10 +1658,11 @@ FUNCTION {inproceedings}
       format.bvolume output
       format.number.series output
       format.pages output
-      address "address" bibinfo.check output
+      % address "address" bibinfo.check output % VB
       new.sentence
-      organization "organization" bibinfo.check output
-      publisher "publisher" bibinfo.check output
+      % organization "organization" bibinfo.check output % VB
+      % publisher "publisher" bibinfo.check output % VB
+      format.publisher.address output % VB
     }
     { format.incoll.inproc.crossref output.nonnull
       format.pages output
@@ -1571,14 +1677,16 @@ FUNCTION {manual}
 { output.bibitem
   format.authors output
   author format.key output
+  name.or.dash % nmdash
   format.date "year" output.check
   date.block
   title empty$ 'skip$ 'possibly.setup.inlinelink if$ % urlbst
   format.btitle "title" output.check
   format.edition output
   organization address new.block.checkb
-  organization "organization" bibinfo.check output
-  address "address" bibinfo.check output
+  % organization "organization" bibinfo.check output %VB
+  % address "address" bibinfo.check output %VB
+  format.publisher.address output %VB
   new.block
   format.note output
   fin.entry
@@ -1588,6 +1696,7 @@ FUNCTION {mastersthesis}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
+  name.or.dash % nmdash
   format.date "year" output.check
   date.block
   title empty$ 'skip$ 'possibly.setup.inlinelink if$ % urlbst
@@ -1596,7 +1705,7 @@ FUNCTION {mastersthesis}
   new.block
   bbl.mthesis format.thesis.type output.nonnull
   school "school" bibinfo.warn output
-  address "address" bibinfo.check output
+  % address "address" bibinfo.check output % VB
   month "month" bibinfo.check output
   new.block
   format.note output
@@ -1607,6 +1716,7 @@ FUNCTION {misc}
 { output.bibitem
   format.authors output
   author format.key output
+  name.or.dash % nmdash
   format.date "year" output.check
   date.block
   title empty$ 'skip$ 'possibly.setup.inlinelink if$ % urlbst
@@ -1621,6 +1731,7 @@ FUNCTION {phdthesis}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
+  name.or.dash % nmdash
   format.date "year" output.check
   date.block
   title empty$ 'skip$ 'possibly.setup.inlinelink if$ % urlbst
@@ -1629,7 +1740,7 @@ FUNCTION {phdthesis}
   new.block
   bbl.phdthesis format.thesis.type output.nonnull
   school "school" bibinfo.warn output
-  address "address" bibinfo.check output
+  % address "address" bibinfo.check output %VB
   new.block
   format.note output
   fin.entry
@@ -1639,6 +1750,7 @@ FUNCTION {proceedings}
 { output.bibitem
   format.editors output
   editor format.key output
+  name.or.dash % nmdash
   format.date "year" output.check
   date.block
   title empty$ 'skip$ 'possibly.setup.inlinelink if$ % urlbst
@@ -1662,6 +1774,7 @@ FUNCTION {techreport}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
+  name.or.dash % nmdash
   format.date "year" output.check
   date.block
   title empty$ 'skip$ 'possibly.setup.inlinelink if$ % urlbst
@@ -1670,7 +1783,7 @@ FUNCTION {techreport}
   new.block
   format.tr.number output.nonnull
   institution "institution" bibinfo.warn output
-  address "address" bibinfo.check output
+  % address "address" bibinfo.check output % VB
   new.block
   format.note output
   fin.entry
@@ -1680,6 +1793,7 @@ FUNCTION {unpublished}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
+  name.or.dash % nmdash
   format.date "year" output.check
   date.block
   title empty$ 'skip$ 'possibly.setup.inlinelink if$ % urlbst
@@ -1961,6 +2075,8 @@ FUNCTION {begin.bib}
     { preamble$ write$ newline$ }
   if$
   "\begin{thebibliography}{" number.label int.to.str$ * "}" *
+  write$ newline$
+  "\newcommand{\enquote}[1]{``#1''}" % merlin.mbs tit-qq
   write$ newline$
   "\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi"
   write$ newline$
