@@ -1310,7 +1310,8 @@ FUNCTION {name.or.dash}
      { s 'oldname := s }
      { s oldname =
          % { "---{}---{}---" }
-         { "---\kern-1pt---\kern-1pt---" } %% VB
+         { "\repeatauthor{" oldname * "}" * } %% VB, based on https://tex.stackexchange.com/a/283784 CC BY-SA 3.0
+         % { "---\kern-1pt---\kern-1pt---" } %% VB
          { s 'oldname := s }
        if$
      }
@@ -2076,7 +2077,7 @@ FUNCTION {begin.bib}
   if$
   "\begin{thebibliography}{" number.label int.to.str$ * "}" *
   write$ newline$
-  "\newcommand{\enquote}[1]{``#1''}" % merlin.mbs tit-qq
+  "\providecommand{\enquote}[1]{``#1''}" % merlin.mbs tit-qq; changed from newcommand to providecommand for compatibility with bibentry
   write$ newline$
   "\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi"
   write$ newline$

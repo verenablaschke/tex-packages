@@ -35,6 +35,8 @@
   {}
   []
 
+\newcommand*{\subtitledsubsection}[2]{\subsection[#1]{#1\\\normalsize\textit{#2}}}
+
 % \makeatletter
 % % \renewcommand\paragraph{
 % %     \@startsection {paragraph}               % name
@@ -86,6 +88,55 @@ pagebackref,
 \else
 \(\rightarrow\)~\textit{Cited on pp.~#2.}%
 \fi
+}
+
+
+% Full in-text citations
+\RequirePackage{bibentry}
+\newcommand{\enquote}[1]{``#1''}
+% If you use this, include these two lines in your preamble:
+% \bibliographystyle{vbib}
+% \nobibliography{bibfilename}
+% Include bibentries in the backreferences used in the bibliography:
+% https://tex.stackexchange.com/a/2920 (CC BY-SA 2.5)
+\let\oldnocite\nocite
+\makeatletter
+\renewcommand*{\nocite}[1]{\oldnocite{#1}\Hy@backout{#1}}
+\makeatother
+
+% Properly handle repeating author names (use dash in bibliography but not for bibentry)
+% Based on https://tex.stackexchange.com/a/283784 (CC BY-SA 3.0)
+\RequirePackage{etoolbox}
+\newcommand{\repeatauthor}[1]{#1}
+\AtBeginEnvironment{thebibliography}{\renewcommand{\repeatauthor}[1]{---\kern-1pt---\kern-1pt---}}
+\AtEndEnvironment{thebibliography}{\renewcommand\repeatauthor[1]{#1}}
+
+
+
+\RequirePackage{marginnote}
+
+\newcommand*{\thesubtitle}{}
+\newcommand*{\subtitle}[1]{\renewcommand{\thesubtitle}{#1}}
+
+\makeatletter
+\renewcommand\maketitle{
+{\raggedright
+\begin{center}
+{\marginnote{{\sffamily\large \textsc{\MakeLowercase{\thesubtitle}}}} \LARGE\sffamily \@title }\\[4ex] 
+{\marginnote{\@date} \large \@author}
+\end{center}}}
+\makeatother
+
+
+\setlength{\marginparwidth}{70pt}
+\RequirePackage{ragged2e}
+\renewcommand*{\raggedleftmarginnote}{\RaggedLeft}
+\renewcommand*{\raggedrightmarginnote}{\RaggedRight}
+
+\RequirePackage{placeins}
+\newcommand*{\startmain}{
+\renewcommand*{\marginfont}{\normalfont\small\sffamily}
+\FloatBarrier
 }
 
 
