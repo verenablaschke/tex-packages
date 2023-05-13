@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage{vbarticle}
+\usepackage{lipsum}
+
+\title{How do I want to style my articles?}
+\subtitle{A demo file}
+\author{Jane Doe}
+
+
+% Use one of the following:
+\backreftype{section}
+% \backreftype{page}
+% \backreftype{none}
+
+\begin{document}
+
+\maketitle
+\startmain
+
+\section{Introduction}
+\lipsum[1]
+\citep{doe2023example}
+
+\section{Another Section}
+\subtitledsubsection{Subsection}{With a substitle}
+\citet{book1} refers to the following: \lipsum[2]
+
+\subsection{Another subsection}
+\marginnote{Lots of space for margin notes! \lipsum[1][1-2]
+\citep{book2}}
+\lipsum[3]
+
+\bibliography{demo}
+\bibliographystyle{vbib}
+
+\end{document}

@@ -1,0 +1,22 @@
+@inproceedings{doe2023example,
+    title = "An example title to be printed between quotation marks",
+    author = "Doe, Jane and Mustermann, Erika",
+    booktitle = "Proceedings of Some Conference",
+    year = "2023",
+    address = "Earth",
+    publisher = "Fancy Publisher",
+    url = "example.com",
+    pages = "7--11",
+}
+
+@book{book1,
+    title={My book},
+    author={Thor, A. U.},
+    year={2000}
+}
+
+@book{book2,
+    title={The sequel},
+    author={Thor, A. U.},
+    year={2001},
+}

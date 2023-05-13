@@ -1,9 +1,56 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{vbarticle}[2023-04-11 academic style file]
 
-\RequirePackage{titlesec}
-% \LoadClass{article}
 
+%%%%%%%%%%%%%%%%%%
+% General set-up %
+%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[textwidth=12cm,
+            textheight=20cm,
+            lmargin=4cm,
+            marginpar=3.5cm,
+            % showframe
+            ]{geometry}
+
+\RequirePackage{libertine}
+\RequirePackage{inconsolata}
+\RequirePackage{natbib}
+\RequirePackage{xcolor}
+\RequirePackage{microtype}
+
+\raggedbottom
+
+%%%%%%%%%%%%%%%%%%
+% Document title %
+%%%%%%%%%%%%%%%%%%
+
+\newcommand*{\thesubtitle}{}
+\newcommand*{\subtitle}[1]{\renewcommand{\thesubtitle}{#1}}
+
+\makeatletter
+\renewcommand\maketitle{
+{\raggedright
+\begin{center}
+{\marginnote{{\sffamily\large \textsc{\MakeLowercase{\thesubtitle}}}} \LARGE\sffamily \@title }\\[4ex] 
+{\marginnote{\@date} \large \@author}
+\end{center}}}
+\makeatother
+
+% No floats above the document title
+\RequirePackage{placeins}
+\newcommand*{\startmain}{
+\renewcommand*{\marginfont}{\normalfont\small\sffamily}
+\FloatBarrier
+}
+
+%%%%%%%%%%%%%%%%%%
+% Section titles %
+%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{titlesec}
+
+% Put the section number into the left margin
 \newcommand{\marginlabel}[1]{\llap{#1\hspace{1em}}}
 
 \titleformat{\section}
@@ -37,61 +84,70 @@
 
 \newcommand*{\subtitledsubsection}[2]{\subsection[#1]{#1\\\normalsize\textit{#2}}}
 
-% \makeatletter
-% % \renewcommand\paragraph{
-% %     \@startsection {paragraph}               % name
-% %     {4}                                      % level
-% %     {\z@}                                    % indent 
-% %     {-3.25ex\@plus -1ex \@minus -.2ex}       % before skip
-% %     {1.5ex \@plus .2ex}                      % afterskip
-% %     {\normalfont\normalsize\bfseries}        % style
-% %   }
 
-% \renewcommand\section{
-%     \@startsection {section}
-%     {1}
-%     {\z@}
-%     {-3.5ex \@plus -1ex \@minus -.2ex}
-%     {2.3ex \@plus.2ex}
-%     {\normalfont\Large\bfseries}}
-    
-% \renewcommand\thesection{\noindent\llap{\@arabic\c@section}}
-% \makeatother
-
-% % \def\@seccntformat#1{\makebox[0pt][r]{\csname the#1\endcsname\hspace{6pt}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Margin notes and captions %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{caption}
 \captionsetup{labelsep=period, font={small, sf}}
 
-\RequirePackage{libertine}
-\RequirePackage{inconsolata}
-\RequirePackage{natbib}
-\RequirePackage{xcolor}
-\RequirePackage{microtype}
-\RequirePackage[
-% backref=page, % or section
-pagebackref,
-            colorlinks,
-            allcolors=teal
-            ]{hyperref}
-% \RequirePackage{backref}
+\RequirePackage{marginnote}
+\RequirePackage{ragged2e}
+\renewcommand*{\raggedleftmarginnote}{\RaggedLeft}
+\renewcommand*{\raggedrightmarginnote}{\RaggedRight}
 
-% Based on https://tex.stackexchange.com/a/400052/158727 (CC BY-SA 3.0), see also https://github.com/latex3/hyperref/blob/d90a5d874d2ec1536aca07a3be938faef1f23cb8/backref.dtx#L206
-\renewcommand*{\backrefsep}{,~}%
-\renewcommand*{\backreftwosep}{,~}% ', and~'
-\renewcommand*{\backreflastsep}{,~}% ' and~'
-\renewcommand*{\backrefalt}[4]{%
-\ifcase #1 % arg1 of backrefalt is the number of (non-duplicate) citation pages/section
-\(\rightarrow\)~\textit{No citations.}%
-\or
-\(\rightarrow\)~\textit{Cited on p.~#2}.%
-\else
-\(\rightarrow\)~\textit{Cited on pp.~#2.}%
-\fi
+%%%%%%%%%%%%%
+% Citations %
+%%%%%%%%%%%%%
+
+\newcommand*{\citenotesg}{}
+\newcommand*{\citenotepl}{}
+\newcommand*{\setupbackreftext}{
+ % Based on https://tex.stackexchange.com/a/400052/158727 (CC BY-SA 3.0), see also https://github.com/latex3/hyperref/blob/d90a5d874d2ec1536aca07a3be938faef1f23cb8/backref.dtx#L206
+    \renewcommand*{\backrefsep}{,~}%
+    \renewcommand*{\backreftwosep}{,~}% ', and~'
+    \renewcommand*{\backreflastsep}{,~}% ' and~'
+    \renewcommand*{\backrefalt}[4]{%
+        \ifcase ##1 % arg1 of backrefalt is the number of (non-duplicate) citation pages/section
+        \(\rightarrow\)~\textit{No citations.}%
+        \or
+        \(\rightarrow\)~\textit{Cited \citenotesg~##2}.%
+        \else
+        \(\rightarrow\)~\textit{Cited \citenotepl~##2.}%
+        \fi
+    }
 }
 
+\newcommand{\pagestr}{page}
+\newcommand{\sectionstr}{section}
+\newcommand{\backrefarg}{}
+\newcommand*{\backreftype}[1]{
+    \RequirePackage[
+                backref=#1, % page, section, none/false
+                colorlinks,
+                allcolors=teal
+                ]{hyperref}
+    \renewcommand{\backrefarg}{#1}
+    \ifx\backrefarg\pagestr
+        \renewcommand*{\citenotesg}{on p.}
+        \renewcommand*{\citenotepl}{on pp.}
+        \setupbackreftext
+    \else
+        \ifx\backrefarg\sectionstr
+            \renewcommand*{\citenotesg}{in section}
+            \renewcommand*{\citenotepl}{in sections}
+            \setupbackreftext
+        \fi
+    \fi
+}
 
-% Full in-text citations
+% Call one of the following in your article:
+% \backreftype{section}
+% \backreftype{page}
+% \backreftype{none}
+
+% Full in-text citations via bibentry
 \RequirePackage{bibentry}
 \newcommand{\enquote}[1]{``#1''}
 % If you use this, include these two lines in your preamble:
@@ -111,33 +167,4 @@ pagebackref,
 \AtBeginEnvironment{thebibliography}{\renewcommand{\repeatauthor}[1]{---\kern-1pt---\kern-1pt---}}
 \AtEndEnvironment{thebibliography}{\renewcommand\repeatauthor[1]{#1}}
 
-
-
-\RequirePackage{marginnote}
-
-\newcommand*{\thesubtitle}{}
-\newcommand*{\subtitle}[1]{\renewcommand{\thesubtitle}{#1}}
-
-\makeatletter
-\renewcommand\maketitle{
-{\raggedright
-\begin{center}
-{\marginnote{{\sffamily\large \textsc{\MakeLowercase{\thesubtitle}}}} \LARGE\sffamily \@title }\\[4ex] 
-{\marginnote{\@date} \large \@author}
-\end{center}}}
-\makeatother
-
-
-\setlength{\marginparwidth}{70pt}
-\RequirePackage{ragged2e}
-\renewcommand*{\raggedleftmarginnote}{\RaggedLeft}
-\renewcommand*{\raggedrightmarginnote}{\RaggedRight}
-
-\RequirePackage{placeins}
-\newcommand*{\startmain}{
-\renewcommand*{\marginfont}{\normalfont\small\sffamily}
-\FloatBarrier
-}
-
-
-\raggedbottom
+%%%%%%%%%%%%%%%%%%
