@@ -42,7 +42,9 @@ there are left in your text:
 
 ## Style files for the `memoir` class
 
-From most to least recent. I'm learning more about book design :-)
+From most to least recent. I'm learning more about book design and about typesetting :-)
+
+Which is to say, all of these files could be improved in several ways. If only I had more time...
 
 <table>
 <td>
