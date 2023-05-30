@@ -1,0 +1,52 @@
+\begin{filecontents*}{demo.bib}
+@inproceedings{doe2023example,
+    title = "An example title",
+    author = "Doe, Jane and Mustermann, Erika",
+    booktitle = "Proceedings of Some Conference",
+    year = "2023",
+    address = "Earth",
+    publisher = "Fancy Publisher",
+    url = "https://example.com",
+    pages = "7--11",
+}
+\end{filecontents*}
+
+\documentclass{beamer}
+\usepackage{mainlpbeamer}
+
+\title{This is my talk}
+\date{}
+\author{Author1, Author2}
+\institute{Venue, Date}
+
+
+\begin{document}
+
+\begin{frame}[noframenumbering, plain]
+   \tikz [remember picture,overlay]
+    \node at
+        ([xshift=-2.1cm, yshift=-2.5cm]current page.east) 
+        {\includegraphics[width=0.2\textwidth]{mainlp-logo-500.png}};
+    \tikz [remember picture,overlay]
+    \node at
+        ([xshift=-4.5cm, yshift=-2.38cm]current page.east) % aligning the baselines of 'CIS' and 'nlp'
+        {\includegraphics[width=0.2\textwidth]{CIS-logo.png}};
+   \titlepage
+\end{frame}
+
+\section{Here's a section} % TODO I want to define nice-looking section subtitles
+
+\begin{frame}{Hi}
+Servus, this is a demo slide. The theme is still a WIP, but the overall look won't change much.
+
+Here's a parenthetical reference \citep{doe2023example}
+
+Here's a text colour for \textcolor{lmuGreen}{emphasis}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+    \bibliography{demo}
+    \bibliographystyle{chicago} % TODO: I want to create a nicer stylefile
+\end{frame}
+
+\end{document}

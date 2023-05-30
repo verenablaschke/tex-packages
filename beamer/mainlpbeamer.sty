@@ -1,0 +1,121 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{mainlpbeamer}[2023-05-30 beamer]
+
+\usetheme{metropolis}
+\RequirePackage{natbib}
+\RequirePackage{hyperref}
+\RequirePackage[T1]{fontenc}
+
+\setbeamercolor{normal text}{%
+fg=mDarkTeal,
+bg=white % instead of light grey
+}
+
+% Visually de-emphasize parenthetical citations.
+% This is done by redefining the command rather than hyperref's colorlink options
+% because the latter doesn't change the colour of the enclosing parentheses.
+\definecolor{citeCol}{HTML}{ababab}
+\let\citepold=\citep
+\renewcommand{\citep}[1]{{\color{citeCol}\citepold{#1}}}
+
+\definecolor{midTeal}{HTML}{2a6280}
+\definecolor{lmuGreen}{HTML}{36a365}
+\setbeamercolor{alerted text}{%
+  fg=lmuGreen
+}
+\setbeamercolor{example text}{%
+  fg=midTeal
+}
+\setbeamercolor{titlelike}{use=example text, parent=example text}
+\setbeamercolor{date}{use=example text, parent=example text}
+\setbeamercolor{palette primary}{%
+  use=normal text,
+  fg=normal text.bg,
+  bg=midTeal
+}
+
+\newcommand{\textem}[1]{\textcolor{lmuGreen}{#1}}
+
+% Beamer notes: http://tug.ctan.org/macros/latex/contrib/beamer/doc/beameruserguide.pdf ch. 19
+% \setbeameroption{show notes}
+% \setbeameroption{show notes on second screen=right}
+% \setbeameroption{show only notes}
+\setbeamertemplate{note page}{
+\raggedright
+\vspace*{\baselineskip}
+\insertnote
+}
+
+\newcommand{\floatingbox}[1]{%
+% Based on https://tex.stackexchange.com/a/321394
+{\tikz\node[opacity=0.6,text opacity=1,fill=white,inner sep=\fboxsep,anchor=base]{\parbox{\textwidth}{\hfil#1\hfil}};}
+}
+
+\newcommand{\greenbox}[1]{%
+\tikz\node[opacity=0.8,text opacity=1,fill=lmuGreen!70!yellow!30,inner sep=\fboxsep,anchor=base]{#1};}
+% \colorbox{lmuGreen!30}{#1}}
+
+
+% Blue-green gradient background for title.
+% Heavily based on https://tex.stackexchange.com/a/285064 (CC BY-SA 3.0)
+\makeatletter
+\AtBeginDocument{
+    \pgfdeclareverticalshading{beamer@topshade}{\paperwidth}{%
+        color(0pt)=(bg);
+        color(0pt)=(bg)}
+}
+\setbeamertemplate{frametitle}
+{%
+    \nointerlineskip%
+    \vskip-2pt%
+    \hbox{\leavevmode
+        \advance\beamer@leftmargin by -12bp%
+        \advance\beamer@rightmargin by -12bp%
+        \beamer@tempdim=\textwidth%
+        \advance\beamer@tempdim by \beamer@leftmargin%
+        \advance\beamer@tempdim by \beamer@rightmargin%
+        \hskip-\Gm@lmargin\hbox{%
+            \setbox\beamer@tempbox=\hbox{\begin{minipage}[b]{\paperwidth}%
+                    \vbox{}
+                    \vskip.75ex%
+                    \leftskip0.3cm%
+                    \rightskip0.3cm plus1fil\leavevmode
+                    \insertframetitle%
+                    \ifx\insertframesubtitle\@empty%
+                    \strut\par%
+                    \else
+                    \par{\usebeamerfont*{framesubtitle}{\usebeamercolor[fg]{framesubtitle}\insertframesubtitle}\strut\par}%
+                    \fi%
+                    \nointerlineskip
+                    \vskip1ex%
+                    \vbox{}%
+                \end{minipage}}%
+                \beamer@tempdim=\ht\beamer@tempbox%
+                \advance\beamer@tempdim by 2pt%
+                \begin{pgfpicture}{0pt}{0pt}{\paperwidth}{\beamer@tempdim}
+                    \usebeamercolor{frametitle right}
+                    \pgfpathrectangle{\pgfpointorigin}{\pgfpoint{\paperwidth}{\beamer@tempdim}}
+                    \pgfusepath{clip}
+                    \pgftext[left,base]{\pgfuseshading{beamer@frametitleshade}}
+                \end{pgfpicture}
+                \hskip-\paperwidth%
+                \box\beamer@tempbox%
+            }%
+            \hskip-\Gm@rmargin%
+        }%
+        \nointerlineskip
+        \vskip-0.2pt
+        \hbox to\textwidth{\hskip-\Gm@lmargin\pgfuseshading{beamer@topshade}\hskip-\Gm@rmargin}
+        \vskip-2pt
+    }
+\makeatother
+
+\colorlet{titleleft}{midTeal}
+\colorlet{titleright}{lmuGreen}
+\setbeamercolor*{frametitle}{fg=white}
+
+\makeatletter
+\pgfdeclarehorizontalshading[titleleft,titleright]{beamer@frametitleshade}{\paperheight}{%
+    color(0pt)=(titleleft);
+    color(\paperwidth)=(titleright)}
+\makeatother
