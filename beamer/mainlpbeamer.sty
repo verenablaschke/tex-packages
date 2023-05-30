@@ -1,6 +1,11 @@
+%%%%%%%%%%%%%%%%%%
+% This builds on the metropolis beamer theme by Matthias Vogelgesang, which is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (https://creativecommons.org/licenses/by-sa/4.0/).
+% https://github.com/matze/mtheme
+%%%%%%%%%%%%%%%%%%
+
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{mainlpbeamer}[2023-05-30 beamer]
-\usetheme[subsectionpage=progressbar]{metropolis}
+\usetheme[subsectionpage=progressbar, numbering=counter]{metropolis}
 \RequirePackage{natbib}
 \RequirePackage{hyperref}
 \RequirePackage{microtype}
@@ -190,6 +195,22 @@ bg=white % instead of light grey
 }
 \makeatother
 
+%%%%%%%%%%%%%%%%%
+% Frame numbers %
+%%%%%%%%%%%%%%%%%
+
+% Mysteriously, this \textwidth is not the one we specified but instead the paperwidth. And the footline is indented. Instead of figuring this out properly now, let's just hack this by changing the width and sep of the box.
+\makeatletter
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=0.965\textwidth, sep=8pt]{footline}%
+    \usebeamerfont{page number in head/foot}%
+    \usebeamertemplate*{frame footer}
+    \hfill%
+    \usebeamertemplate*{frame numbering}
+  \end{beamercolorbox}%
+}
+\makeatother
+
 %%%%%%%%%%%%
 % Sections %
 %%%%%%%%%%%%
@@ -218,3 +239,25 @@ bg=white % instead of light grey
   \vspace{\baselineskip}
 }
 \makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% References & appendix %
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% When calculating the progress, don't include the reference or appendix slides
+\newcommand{\customtotalframes}{\inserttotalframenumber}
+\newcommand{\startbackmatter}{
+    \renewcommand{\customtotalframes}{\value{framenumber}}
+}
+% Override https://github.com/matze/mtheme/blob/2fa6084b9d34fec9d2d5470eb9a17d0bf712b6c8/source/beamerinnerthememetropolis.dtx#L337
+\makeatletter
+\setbeamertemplate{progress bar in section page}{
+  \setlength{\metropolis@progressonsectionpage}{%
+    \textwidth * \ratio{\insertframenumber pt}{\customtotalframes pt}%
+  }%
+  \begin{tikzpicture}
+    \fill[bg] (0,0) rectangle (\textwidth, \metropolis@progressonsectionpage@linewidth);
+    \fill[fg] (0,0) rectangle (\metropolis@progressonsectionpage, \metropolis@progressonsectionpage@linewidth);
+  \end{tikzpicture}%
+}
+\makeatother

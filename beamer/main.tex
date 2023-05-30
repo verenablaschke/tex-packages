@@ -18,16 +18,11 @@
 % In conjunction with XeLaTeX, use this instead of TIPA (or directly copy-paste the IPA characters, no package needed)
 \usepackage{xunicode}
 
-
 \title{This is my talk}
 \author{Jeanne Doe}
 \institute{Institute}
 \venue{Venue}
 \date{Date}
-
-\AtBeginDocument{
-  \renewcommand\textipa[2][r]{{\fontfamily{cm#1}\tipaencoding #2}}
-}
 
 
 \begin{document}
@@ -58,6 +53,7 @@ Here's a text colour for \textem{emphasis}.
 
 \subtitledsection{Another section}{with another subtitle}
 
+% \addtocounter{framenumber}{40} % demo the page number positioning for larger numbers
 \begin{frame}{Let's try IPA!}
 ɛtəɹ 
 
@@ -66,9 +62,15 @@ d\textsyllabic{n} \textsuperscript{2}fj\ae{}\textlengthmark{}\textrtaild{}\texts
 Normal text for comparison
 \end{frame}
 
+\startbackmatter
+
 \begin{frame}[allowframebreaks]
     \bibliography{demo}
     \bibliographystyle{vbib} % TODO: stylefile specifically for presentations
+\end{frame}
+
+\begin{frame}{Back-up slide}
+Surprise!
 \end{frame}
 
 \end{document}
