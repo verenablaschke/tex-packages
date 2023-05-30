@@ -1,10 +1,32 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{mainlpbeamer}[2023-05-30 beamer]
-
-\usetheme{metropolis}
+\usetheme[subsectionpage=progressbar]{metropolis}
 \RequirePackage{natbib}
 \RequirePackage{hyperref}
-\RequirePackage[T1]{fontenc}
+\RequirePackage{microtype}
+
+%%%%%%%%%%%%%%%%%%
+% General layout %
+%%%%%%%%%%%%%%%%%%
+
+\setlength{\hoffset}{-1in} % The left margin of the main text is calculated as 1in + hoffset + oddsidemargin. Let's simplify things and only work with oddsidemargin
+\setlength{\textwidth}{300pt}
+% Center full text lines on the slide
+\newlength{\totalmargin}
+\setlength{\totalmargin}{\paperwidth}
+\addtolength{\totalmargin}{-\textwidth}
+\setlength{\oddsidemargin}{0.5\totalmargin}
+\newlength{\barheight}
+\setlength{\barheight}{2pt}
+
+\makeatletter
+\setlength{\metropolis@titleseparator@linewidth}{\barheight}
+\setlength{\metropolis@progressonsectionpage@linewidth}{\barheight}
+\makeatother
+
+%%%%%%%%%%%
+% Colours %
+%%%%%%%%%%%
 
 \setbeamercolor{normal text}{%
 fg=mDarkTeal,
@@ -26,15 +48,43 @@ bg=white % instead of light grey
 \setbeamercolor{example text}{%
   fg=midTeal
 }
-\setbeamercolor{titlelike}{use=example text, parent=example text}
-\setbeamercolor{date}{use=example text, parent=example text}
-\setbeamercolor{palette primary}{%
-  use=normal text,
-  fg=normal text.bg,
-  bg=midTeal
+\setbeamercolor{section title}{%
+  fg=normal text.fg
+}
+\setbeamercolor{subsection title}{%
+  fg=normal text.fg
+}
+\setbeamercolor{titlelike}{use=normal text}
+\setbeamercolor{date}{use=normal text}
+\setbeamercolor{progress bar}{%
+  use=alerted text,
+  fg=alerted text.fg,
+  bg=alerted text.fg!50!black!30
 }
 
 \newcommand{\textem}[1]{\textcolor{lmuGreen}{#1}}
+
+%%%%%%%%%
+% Fonts %
+%%%%%%%%%
+
+% Fonts! (-> XeLaTex)
+% via https://fonts.google.com/specimen/Open+Sans
+% via https://fonts.google.com/specimen/Noto+Sans
+\setsansfont{NotoSans}[
+    Path=./fonts/,
+    Extension=.ttf,
+    UprightFont=*-Regular,
+    ItalicFont=*-Italic,
+    BoldFont=*-SemiBold,
+    % UprightFont=*-Light,
+    % ItalicFont=*-LightItalic,
+    % BoldFont=*-SemiBold,
+]
+
+%%%%%%%%%%%%%%
+% Note pages %
+%%%%%%%%%%%%%%
 
 % Beamer notes: http://tug.ctan.org/macros/latex/contrib/beamer/doc/beameruserguide.pdf ch. 19
 % \setbeameroption{show notes}
@@ -46,6 +96,10 @@ bg=white % instead of light grey
 \insertnote
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Other design details %
+%%%%%%%%%%%%%%%%%%%%%%%%
+
 \newcommand{\floatingbox}[1]{%
 % Based on https://tex.stackexchange.com/a/321394
 {\tikz\node[opacity=0.6,text opacity=1,fill=white,inner sep=\fboxsep,anchor=base]{\parbox{\textwidth}{\hfil#1\hfil}};}
@@ -55,67 +109,112 @@ bg=white % instead of light grey
 \tikz\node[opacity=0.8,text opacity=1,fill=lmuGreen!70!yellow!30,inner sep=\fboxsep,anchor=base]{#1};}
 % \colorbox{lmuGreen!30}{#1}}
 
+%%%%%%%%%%%%%%
+% Title page %
+%%%%%%%%%%%%%%
 
-% Blue-green gradient background for title.
-% Heavily based on https://tex.stackexchange.com/a/285064 (CC BY-SA 3.0)
-\makeatletter
-\AtBeginDocument{
-    \pgfdeclareverticalshading{beamer@topshade}{\paperwidth}{%
-        color(0pt)=(bg);
-        color(0pt)=(bg)}
+\newcommand{\gradientbar}{%
+\begin{tikzpicture}
+    \shade[left color=midTeal,right color=lmuGreen] (0,0) rectangle ++(\textwidth,\barheight);
+\end{tikzpicture}
 }
+
+% Title page: use gradient bar
+\setbeamertemplate{title separator}{
+  \gradientbar
+  \par
+}
+
+\setbeamerfont{date}{size=\footnotesize}
+\setbeamerfont{venue}{size=\footnotesize}
+\setbeamerfont{institute}{size=\footnotesize}
+
+\setbeamertemplate{author}{
+  \vspace*{2em}
+  \insertauthor%
+  \par%
+}
+\setbeamertemplate{institute}{
+  \insertinstitute%
+  \par%
+}
+\setbeamertemplate{venue}{
+  \insertvenue%
+  \par%
+}
+
+\newcommand{\insertvenue}[1]{}
+\newcommand{\venue}[1]{\renewcommand{\insertvenue}{#1}}
+
+\setbeamertemplate{title page}{
+  \begin{minipage}[b][\paperheight]{\textwidth}
+    \vfill%
+    \ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
+    \ifx\insertsubtitle\@empty\else\usebeamertemplate*{subtitle}\fi
+    \usebeamertemplate*{title separator}
+    \ifx\beamer@shortauthor\@empty\else\usebeamertemplate*{author}\fi
+    \ifx\insertinstitute\@empty\else\usebeamertemplate*{institute}\fi
+  \vspace{\baselineskip}
+    \ifx\insertvenue\@empty\else\usebeamertemplate*{venue}\fi
+    \ifx\insertdate\@empty\else\usebeamertemplate*{date}\fi
+    \vfill
+    \vspace*{1mm}
+  \end{minipage}
+}
+
+%%%%%%%%%%%%%%%%
+% Frame titles %
+%%%%%%%%%%%%%%%%
+
+% Override https://github.com/matze/mtheme/blob/2fa6084b9d34fec9d2d5470eb9a17d0bf712b6c8/source/beamerouterthememetropolis.dtx#L163 to
+% - align the title with the text
+% - adjust the vertical space slightly
+% - use no background for the title, but underline it with a colour gradient
+% - use the main text colour
+\setbeamercolor*{frametitle}{fg=normal text.fg}
+\makeatletter
 \setbeamertemplate{frametitle}
 {%
     \nointerlineskip%
-    \vskip-2pt%
-    \hbox{\leavevmode
-        \advance\beamer@leftmargin by -12bp%
-        \advance\beamer@rightmargin by -12bp%
-        \beamer@tempdim=\textwidth%
-        \advance\beamer@tempdim by \beamer@leftmargin%
-        \advance\beamer@tempdim by \beamer@rightmargin%
-        \hskip-\Gm@lmargin\hbox{%
-            \setbox\beamer@tempbox=\hbox{\begin{minipage}[b]{\paperwidth}%
-                    \vbox{}
-                    \vskip.75ex%
-                    \leftskip0.3cm%
-                    \rightskip0.3cm plus1fil\leavevmode
-                    \insertframetitle%
-                    \ifx\insertframesubtitle\@empty%
-                    \strut\par%
-                    \else
-                    \par{\usebeamerfont*{framesubtitle}{\usebeamercolor[fg]{framesubtitle}\insertframesubtitle}\strut\par}%
-                    \fi%
-                    \nointerlineskip
-                    \vskip1ex%
-                    \vbox{}%
-                \end{minipage}}%
-                \beamer@tempdim=\ht\beamer@tempbox%
-                \advance\beamer@tempdim by 2pt%
-                \begin{pgfpicture}{0pt}{0pt}{\paperwidth}{\beamer@tempdim}
-                    \usebeamercolor{frametitle right}
-                    \pgfpathrectangle{\pgfpointorigin}{\pgfpoint{\paperwidth}{\beamer@tempdim}}
-                    \pgfusepath{clip}
-                    \pgftext[left,base]{\pgfuseshading{beamer@frametitleshade}}
-                \end{pgfpicture}
-                \hskip-\paperwidth%
-                \box\beamer@tempbox%
-            }%
-            \hskip-\Gm@rmargin%
-        }%
-        \nointerlineskip
-        \vskip-0.2pt
-        \hbox to\textwidth{\hskip-\Gm@lmargin\pgfuseshading{beamer@topshade}\hskip-\Gm@rmargin}
-        \vskip-2pt
-    }
+    \vskip6pt
+    \begin{beamercolorbox}[
+        wd=\textwidth,
+        sep=0pt,]{frametitle}%
+    \metropolis@frametitlestrut@start%
+    \insertframetitle%
+    \nolinebreak%
+    \metropolis@frametitlestrut@end%
+    \end{beamercolorbox}%
+    \vskip-6pt
+    \gradientbar
+}
 \makeatother
 
-\colorlet{titleleft}{midTeal}
-\colorlet{titleright}{lmuGreen}
-\setbeamercolor*{frametitle}{fg=white}
+%%%%%%%%%%%%
+% Sections %
+%%%%%%%%%%%%
 
+\newcommand{\sectionsubtitle}{}
+\newcommand{\subtitledsection}[2]{
+{\renewcommand{\sectionsubtitle}{#2}
+\section{#1}}
+}
+% Override https://github.com/matze/mtheme/blob/2fa6084b9d34fec9d2d5470eb9a17d0bf712b6c8/source/beamerinnerthememetropolis.dtx#L266
+\makeatother
+\setbeamertemplate{section page}{
+  \centering
+  \begin{minipage}{22em}
+    \raggedright
+    \usebeamercolor[fg]{section title}
+    \usebeamerfont{section title}
+    \insertsectionhead\\[-1ex]
+    \usebeamertemplate*{progress bar in section page}
+    \par
+    \usebeamercolor[fg]{subsection title}%
+    \usebeamerfont{subsection title}%
+    \sectionsubtitle
+  \end{minipage}
+  \par
+  \vspace{\baselineskip}
+}
 \makeatletter
-\pgfdeclarehorizontalshading[titleleft,titleright]{beamer@frametitleshade}{\paperheight}{%
-    color(0pt)=(titleleft);
-    color(\paperwidth)=(titleright)}
-\makeatother

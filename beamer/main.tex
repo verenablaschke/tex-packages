@@ -11,42 +11,64 @@
 }
 \end{filecontents*}
 
-\documentclass{beamer}
+% Use XeLaTeX!
+\documentclass[aspectratio=32]{beamer}
 \usepackage{mainlpbeamer}
 
+% In conjunction with XeLaTeX, use this instead of TIPA (or directly copy-paste the IPA characters, no package needed)
+\usepackage{xunicode}
+
+
 \title{This is my talk}
-\date{}
-\author{Author1, Author2}
-\institute{Venue, Date}
+\author{Jeanne Doe}
+\institute{Institute}
+\venue{Venue}
+\date{Date}
+
+\AtBeginDocument{
+  \renewcommand\textipa[2][r]{{\fontfamily{cm#1}\tipaencoding #2}}
+}
 
 
 \begin{document}
 
 \begin{frame}[noframenumbering, plain]
+   % \tikz [remember picture,overlay] \draw[help lines] (0,0) grid (10,-20);
    \tikz [remember picture,overlay]
     \node at
-        ([xshift=-2.1cm, yshift=-2.5cm]current page.east) 
+        ([xshift=-2.1cm, yshift=-1.8cm]current page.east) 
         {\includegraphics[width=0.2\textwidth]{mainlp-logo-500.png}};
     \tikz [remember picture,overlay]
     \node at
-        ([xshift=-4.5cm, yshift=-2.38cm]current page.east) % aligning the baselines of 'CIS' and 'nlp'
+        ([xshift=0.2cm, yshift=-1.68cm]current page.east) % aligning the baselines of 'CIS' and 'nlp'
         {\includegraphics[width=0.2\textwidth]{CIS-logo.png}};
    \titlepage
 \end{frame}
 
-\section{Here's a section} % TODO I want to define nice-looking section subtitles
+\subtitledsection{Here's a section}{with a subtitle}
 
-\begin{frame}{Hi}
-Servus, this is a demo slide. The theme is still a WIP, but the overall look won't change much.
+\begin{frame}{How can we do this?}
 
-Here's a parenthetical reference \citep{doe2023example}
+\textit{Servus,} this is a \textbf{demo} slide. The theme is still a WIP, but the a b c d e overall look won't change much.
 
-Here's a text colour for \textcolor{lmuGreen}{emphasis}
+Here's a parenthetical reference \citep{doe2023example}.
+
+Here's a text colour for \textem{emphasis}.
+\end{frame}
+
+\subtitledsection{Another section}{with another subtitle}
+
+\begin{frame}{Let's try IPA!}
+ɛtəɹ 
+
+d\textsyllabic{n} \textsuperscript{2}fj\ae{}\textlengthmark{}\textrtaild{}\textschwa{} \textsuperscript{1}gl\textepsilon{}\textsubarch{\textsci{}} \textsuperscript{1}o\textlengthmark{} \textsuperscript{1}f\textscripta{}l
+
+Normal text for comparison
 \end{frame}
 
 \begin{frame}[allowframebreaks]
     \bibliography{demo}
-    \bibliographystyle{chicago} % TODO: I want to create a nicer stylefile
+    \bibliographystyle{vbib} % TODO: stylefile specifically for presentations
 \end{frame}
 
 \end{document}
