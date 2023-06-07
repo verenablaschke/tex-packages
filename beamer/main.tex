@@ -1,6 +1,6 @@
 \begin{filecontents*}{demo.bib}
 @inproceedings{doe2023example,
-    title = "An example title",
+    title = "A relatively long paper title that just goes on and on",
     author = "Doe, Jane and Mustermann, Erika",
     booktitle = "Proceedings of Some Conference",
     year = "2023",
@@ -8,6 +8,23 @@
     publisher = "Fancy Publisher",
     url = "https://example.com",
     pages = "7--11",
+    venue = "Conference"
+}
+@incollection{author2023example,
+    author = "First, A and Second, B and Third, C",
+    editor = {Edone, D and Edtwo, E and Edthree, F},
+    booktitle = "A cool book",
+    title = "A Cool Chapter",
+    year = "2023",
+    series={A cool series},
+    volume={1},
+    isbn={1234567890},
+}
+@article{author2023article,
+    author = "First, A and Second, B and Third, C",
+    title = "A Cool Article",
+    year = "2023",
+    journal={Journal},
 }
 \end{filecontents*}
 
@@ -24,6 +41,7 @@
 \venue{Venue}
 \date{Date}
 
+\bibliography{demo}
 
 \begin{document}
 
@@ -46,15 +64,17 @@
 
 \textit{Servus,} this is a \textbf{demo} slide. The theme is still a WIP, but the a b c d e overall look won't change much.
 
-Here's a parenthetical reference \citep{doe2023example}.
+Here's a parenthetical reference \citep{doe2023example}. And some footnote references at the bottom of the slide \citef{doe2023example} \citef{author2023example} \citef{author2023article}
 
-Here's a text colour for \textem{emphasis}.
+Here's a text colour for \textem{emphasis} and one for \textdeem{de-emphasis}.
 \end{frame}
 
 \subtitledsection{Another section}{with another subtitle}
 
 % \addtocounter{framenumber}{40} % demo the page number positioning for larger numbers
 \begin{frame}{Let's try IPA!}
+\framesubtitle{subtitle}
+
 ɛtəɹ 
 
 d\textsyllabic{n} \textsuperscript{2}fj\ae{}\textlengthmark{}\textrtaild{}\textschwa{} \textsuperscript{1}gl\textepsilon{}\textsubarch{\textsci{}} \textsuperscript{1}o\textlengthmark{} \textsuperscript{1}f\textscripta{}l
@@ -63,14 +83,10 @@ Normal text for comparison
 \end{frame}
 
 \startbackmatter
-
-\begin{frame}[allowframebreaks]
-    \bibliography{demo}
-    \bibliographystyle{vbib} % TODO: stylefile specifically for presentations
-\end{frame}
+\section*{Appendix}
 
 \begin{frame}{Back-up slide}
-Surprise!
+\texttt{Hello, world!}
 \end{frame}
 
 \end{document}

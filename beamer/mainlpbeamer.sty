@@ -6,7 +6,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{mainlpbeamer}[2023-05-30 beamer]
 \usetheme[subsectionpage=progressbar, numbering=counter]{metropolis}
-\RequirePackage{natbib}
 \RequirePackage{hyperref}
 \RequirePackage{microtype}
 
@@ -38,13 +37,6 @@ fg=mDarkTeal,
 bg=white % instead of light grey
 }
 
-% Visually de-emphasize parenthetical citations.
-% This is done by redefining the command rather than hyperref's colorlink options
-% because the latter doesn't change the colour of the enclosing parentheses.
-\definecolor{citeCol}{HTML}{ababab}
-\let\citepold=\citep
-\renewcommand{\citep}[1]{{\color{citeCol}\citepold{#1}}}
-
 \definecolor{midTeal}{HTML}{2a6280}
 \definecolor{lmuGreen}{HTML}{36a365}
 \setbeamercolor{alerted text}{%
@@ -68,6 +60,7 @@ bg=white % instead of light grey
 }
 
 \newcommand{\textem}[1]{\textcolor{lmuGreen}{#1}}
+\newcommand{\textdeem}[1]{\textcolor{citeCol}{#1}}
 
 %%%%%%%%%
 % Fonts %
@@ -85,6 +78,11 @@ bg=white % instead of light grey
     % UprightFont=*-Light,
     % ItalicFont=*-LightItalic,
     % BoldFont=*-SemiBold,
+]
+\setmonofont{Inconsolata}[
+    Path=./fonts/,
+    Extension=.ttf,
+    UprightFont=*-Regular,
 ]
 
 %%%%%%%%%%%%%%
@@ -114,13 +112,18 @@ bg=white % instead of light grey
 \tikz\node[opacity=0.8,text opacity=1,fill=lmuGreen!70!yellow!30,inner sep=\fboxsep,anchor=base]{#1};}
 % \colorbox{lmuGreen!30}{#1}}
 
+% Don't decrease the font for nested list items
+\setbeamerfont{itemize/enumerate subbody}{size=\normalsize}
+
 %%%%%%%%%%%%%%
 % Title page %
 %%%%%%%%%%%%%%
 
+\newcommand{\leftcol}{midTeal}
+\newcommand{\rightcol}{lmuGreen}
 \newcommand{\gradientbar}{%
 \begin{tikzpicture}
-    \shade[left color=midTeal,right color=lmuGreen] (0,0) rectangle ++(\textwidth,\barheight);
+    \shade[left color=\leftcol,right color=\rightcol] (0,0) rectangle ++(\textwidth,\barheight);
 \end{tikzpicture}
 }
 
@@ -192,6 +195,7 @@ bg=white % instead of light grey
     \end{beamercolorbox}%
     \vskip-6pt
     \gradientbar
+    {\normalfont\small\textit{\insertframesubtitle}}
 }
 \makeatother
 
@@ -261,3 +265,110 @@ bg=white % instead of light grey
   \end{tikzpicture}%
 }
 \makeatother
+
+\usepackage[backend=biber,
+            maxnames=2,
+            uniquelist=false, % unconditionally use et al
+            ]{biblatex}
+
+% https://archiv.dante.de/DTK/PDF/komoedie_2008_2.pdf#page=53
+% https://archiv.dante.de/DTK/PDF/komoedie_2008_4.pdf#page=31
+% https://ctan.net/macros/latex/contrib/biblatex/latex/biblatex.def
+% https://tex.stackexchange.com/questions/12806/guidelines-for-customizing-biblatex-styles
+% https://ctan.net/macros/latex/contrib/biblatex/doc/biblatex.pdf
+
+% Family names only (https://tex.stackexchange.com/a/529305/158727, CC BY-SA 4.0)
+\DeclareNameFormat{family}{%
+  \usebibmacro{name:family}
+    {\namepartfamily}
+    {\namepartgiven}
+    {\namepartprefix}
+    {\namepartsuffix}%
+  \usebibmacro{name:andothers}%
+  }
+\DeclareNameAlias{default}{family}
+\DeclareNameAlias{sortname}{default}
+\DeclareNameAlias{labelname}{default}
+
+% No periods after subsections
+\renewcommand*{\newunitpunct}{\space}
+
+\DefineBibliographyStrings{english}{
+    and = {\&},
+    andothers = {ea},
+    byeditor = {ed\adddot},
+}
+\DeclareFieldFormat{titlecase}{\MakeSentenceCase*{#1}}
+% Use non-breaking spaces for author lists (since we're only citing 2 authors max)
+\DeclareDelimFormat{finalnamedelim}{%
+  \addnbspace\bibstring{and}\addnbspace}
+\DeclareDelimFormat{andothersdelim}{\addnbspace}
+
+% No "In"
+\renewbibmacro{in:}{}
+
+% Remove fields that are not strictly necessary
+% Beamer requires \AtEveryCiteKey instead of \AtEveryBibitem https://tex.stackexchange.com/a/233589/158727
+% List of fields here: https://ctan.kako-dev.de/macros/latex/contrib/biblatex/doc/biblatex.pdf#page=18
+\AtEveryCitekey{%
+  \clearlist{publisher}%
+  \clearlist{location}% = address
+  \clearname{editor}%
+  \clearfield{pages}%
+  \clearfield{month}%
+  \clearfield{url}%
+  \clearfield{doi}%
+  \clearfield{isbn}%
+  \clearfield{volume}%
+  \clearfield{series}%
+  \ifentrytype{inproceedings}{%
+    \clearfield{booktitle}%
+  }{}%
+}
+
+% No parentheses around venue (https://tex.stackexchange.com/a/446733/158727 CC BY-SA 4.0)
+\renewbibmacro*{event+venue+date}{\printfield{venue}}
+
+% Visually de-emphasize parenthetical citations.
+% This is done by redefining the command rather than hyperref's colorlink options
+% because the latter doesn't change the colour of the enclosing parentheses.
+\definecolor{citeCol}{HTML}{ababab}
+
+\newcommand{\citep}[1]{{\color{citeCol}(\citeauthor{#1}~\citeyear{#1})}}
+
+\newcommand{\citet}[1]{\citeauthor{#1}~(\citeyear{#1})}
+
+% In contrast to footfullcite, fullcite doesn't add a final period. AND we can easily remove the marker as well.
+\newcommand{\citef}[1]{\blfootnote{\fullcite{#1}}}
+\newcommand{\pseudocitef}[1]{\blfootnote{\textcolor{citeCol}{#1}}}
+% https://tex.stackexchange.com/a/30726/158727 (CC BY-SA 3.0)
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+\usepackage[hang,flushmargin,norule]{footmisc} % don't indent footnotes, no hrule
+% \addtobeamertemplate{footnote}{\hsize\paperwidth}{}
+
+% Grey footnote citations
+\setbeamercolor{bibliography item}{fg = citeCol}
+\setbeamercolor*{bibliography entry title}{fg = citeCol}
+\setbeamercolor*{bibliography entry author}{fg = citeCol}
+\setbeamercolor*{bibliography entry note}{fg = citeCol}
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Convenience macros %
+%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\arrow}{$\rightarrow$}
+
+%%%%%%%%%
+% TODOs %
+%%%%%%%%%
+
+% fix page dimensions: \textheight (should this include/exclude the subtitle area??), \textwidth, current page.center etc
+
+% no parentheses around article year
+
+% (optionally?) wider footnotes
