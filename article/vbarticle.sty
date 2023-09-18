@@ -7,9 +7,10 @@
 %%%%%%%%%%%%%%%%%%
 
 \RequirePackage[textwidth=12cm,
-            textheight=20cm,
-            lmargin=4cm,
+            textheight=21cm,
+            lmargin=3.5cm,
             marginpar=3.5cm,
+            footskip=2cm,
             % showframe
             ]{geometry}
 
@@ -18,7 +19,6 @@
 \RequirePackage{natbib}
 \RequirePackage{xcolor}
 \RequirePackage{microtype}
-
 \raggedbottom
 
 %%%%%%%%%%%%%%%%%%
@@ -82,7 +82,10 @@
   {}
   []
 
+\newcommand{\subtitledsection}[2]{\section[#1]{#1\vspace{-2pt}\\\normalsize\textit{#2}}}
+\newcommand{\doublysubtitledsection}[3]{\section[#1]{#1\\#2\vspace{-2pt}\\\normalsize\textit{#3}}}
 \newcommand*{\subtitledsubsection}[2]{\subsection[#1]{#1\\\normalsize\textit{#2}}}
+\newcommand*{\doublysubtitledsubsection}[3]{\subsection[#1]{#1\\#2\\\normalsize\textit{#3}}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
