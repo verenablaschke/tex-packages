@@ -18,11 +18,42 @@
 \startmain
 
 \section{Introduction}
+Usage and features:
+\begin{itemize}
+    \item Compile with pdfLaTeX
+    \item In the preamble, call \verb|\backreftype{arg}| to set whether and how the list of references specifies where in the paper the sources are cited. The argument \verb|arg| has to be one of the following:
+    \begin{itemize}
+        \item \verb|section| -- mentions the section(s) (subsections, subsubsections, ...) where the source is referenced. Used in this demo.
+        \item \verb|page| -- mentions the page numbers
+        \item \verb|none| -- does not refer to where the sources are cited.
+    \end{itemize}
+    \item Sections and subsections can have subtitles (see~\S\ref{sec:subtitled}):
+    \begin{itemize}
+        \item \verb|\subtitledsection{title}{subtitle}|
+        \item \verb|\subtitledsubsection{title}{subtitle}| 
+    \end{itemize}
+    \item Unnumbered margin comments are simply added via \verb|\marginnote{}| (via the eponymous package).
+\end{itemize}
+
+\noindent 
+Design considerations:
+\begin{itemize}
+    \item Measure: Currently chosen to be about 80--85 characters per line (spaces and punctuation included), which is already slightly longer than what Robert \citeauthor{bringhurst1996elements} recommends for good readability. I might at some point update the stylesheet to get below 75-ish characters.
+    \item Half the reason this stylefile exists is because I liked the idea of section numbers that ``hang'' in the left margin.
+    \item The bibliography is somewhat over-designed (quotation marks around titles, repeated author names/lists replaced by dashes, back references to where an item was cited) because I wanted to learn more about BibTeX style (BST) files. For notes on editing BST files (e.g., to undo my choices), see \href{https://verenablaschke.github.io/blog/2023/bibtex-style-files/}{here}.
+    \item The style is otherwise an amateurish nod to Robert Bringhurst, Edward Tufte, and Jan Tschichold.
+    \item \textit{To do:} Update the indentation of lists to better match the regular paragraph indentation.
+\end{itemize}
+
+\noindent The rest of this demo file just shows what a document produced with this stylefile looks like.
+An example of what it looks like in an actual document can be found \href{https://arxiv.org/pdf/2403.05902}{here}.
+
 \lipsum[1]
-\citep{doe2023example}
+Lorem \citep{doe2023example}.
 
 \section{Another Section}
 \subtitledsubsection{Subsection}{With a substitle}
+\label{sec:subtitled}
 \citet{book1} refers to the following: \lipsum[2]
 
 \subsection{Another subsection}

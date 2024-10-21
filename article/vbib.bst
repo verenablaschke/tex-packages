@@ -1,4 +1,4 @@
-% Modification of acl_natbib.bst by VB, 2023.
+% Modification of acl_natbib.bst by Verena Blaschke, 2023-.
 % Changes:
 % - double quotes around title (tit-qq)
 % - hrule instead of repeating author/editor names (nmdash, modified nmd-3)
